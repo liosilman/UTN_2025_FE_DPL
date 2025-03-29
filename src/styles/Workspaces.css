@@ -1,0 +1,131 @@
+.workspaces-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.workspaces-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.workspaces-title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.workspaces-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.workspaces-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.workspace-card {
+  border: 1px solid var(--slack-color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.workspace-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.workspace-card-header {
+  padding: 16px;
+  background-color: var(--slack-color-primary);
+  color: white;
+}
+
+.workspace-card-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.workspace-card-owner {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.workspace-card-content {
+  padding: 16px;
+}
+
+.workspace-card-stats {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.workspace-card-stat {
+  flex: 1;
+  text-align: center;
+}
+
+.workspace-card-stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.workspace-card-stat-label {
+  font-size: 12px;
+  color: var(--slack-color-text-light);
+}
+
+.workspace-card-footer {
+  padding: 16px;
+  border-top: 1px solid var(--slack-color-border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.workspace-empty {
+  text-align: center;
+  padding: 48px 0;
+  color: var(--slack-color-text-light);
+}
+
+.workspace-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: var(--slack-color-border);
+}
+
+.workspace-empty-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.workspace-empty-text {
+  font-size: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .workspaces-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .workspaces-actions {
+    width: 100%;
+  }
+
+  .workspaces-actions .btn {
+    flex: 1;
+  }
+}
+

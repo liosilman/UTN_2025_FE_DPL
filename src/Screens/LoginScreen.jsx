@@ -1,97 +1,127 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { useApiRequest } from "../hooks/useApiRequest";
-import ENVIROMENT from "../config/enviroment";
-import { AuthContext } from "../context/AuthContext";
+"use client"
 
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../Context/AuthContext"
+import { useForm } from "../hooks/useForm"
+import "../styles/Auth.css"
+
+/**
+ * Pantalla de inicio de sesión
+ * @returns {JSX.Element} - Componente
+ */
 const LoginScreen = () => {
-    const navigate = useNavigate();
-    const { responseApiState, postRequest } = useApiRequest(ENVIROMENT.URL_API);
-    const { login, isAuthenticated } = useContext(AuthContext);
-    const [formState, setFormState] = useState({ email: "", password: "" });
-    const [errorMessage, setErrorMessage] = useState(null);
+  const { login } = useAuth()
+  const navigate = useNavigate()
+  const [loginError, setLoginError] = useState(null)
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormState((prevState) => ({ ...prevState, [name]: value }));
-    };
+  /**
+   * Valida el formulario de inicio de sesión
+   * @param {Object} values - Valores del formulario
+   * @returns {Object} - Errores de validación
+   */
+  const validateForm = (values) => {
+    const errors = {}
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate("/workspaces"); // Redirigir si el usuario está autenticado
-        }
-    }, [isAuthenticated, navigate]); // Solo redirigir cuando `isAuthenticated` cambie
+    if (!values.email) {
+      errors.email = "El email es obligatorio"
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = "Email inválido"
+    }
 
-    useEffect(() => {
-        if (responseApiState.data && responseApiState.data.ok) {
-            const token = responseApiState.data.data?.authorization_token;
+    if (!values.password) {
+      errors.password = "La contraseña es obligatoria"
+    }
 
-            if (token) {
-                login(token); // Guardar el token y marcar como autenticado
-            } else {
-                setErrorMessage("Token de autenticación no recibido.");
-            }
-        }
+    return errors
+  }
 
-        if (responseApiState.error) {
-            setErrorMessage(responseApiState.error);
-        }
-    }, [responseApiState, navigate, login]);
+  /**
+   * Maneja el envío del formulario
+   * @param {Object} values - Valores del formulario
+   */
+  const handleSubmit = async (values) => {
+    try {
+      await login(values.email, values.password)
+      navigate("/workspaces")
+    } catch (error) {
+      setLoginError("Credenciales inválidas")
+    }
+  }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setErrorMessage(null);
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+    handleSubmit: submitForm,
+  } = useForm({ email: "", password: "" }, handleSubmit, validateForm)
 
-        try {
-            await postRequest("/auth/login", formState);
-        } catch (error) {
-            setErrorMessage("Hubo un error inesperado. Intenta de nuevo.");
-        }
-    };
-
-    return (
-        <div>
-            <h1>Inicia sesión</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formState.email}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formState.password}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-
-                {responseApiState.loading ? (
-                    <span>Cargando...</span>
-                ) : (
-                    <button type="submit">Iniciar sesión</button>
-                )}
-
-                {errorMessage && <span style={{ color: "red" }}>{errorMessage}</span>}
-            </form>
-
-            <div>
-                <p>¿No tienes cuenta? <a href="/register">Regístrate aquí</a></p>
-                <p><a href="/reset-password">Olvidé mi contraseña</a></p>
-            </div>
+  return (
+    <div className="auth-container">
+      <div className="auth-form">
+        <div className="auth-logo">
+          <img src="https://a.slack-edge.com/bv1-10/slack_logo-ebd02d1.svg" alt="Slack" />
         </div>
-    );
-};
 
-export default LoginScreen;
+        <h1 className="auth-title">Inicia sesión en tu espacio de trabajo</h1>
+        <p className="auth-subtitle">Continúa con tu cuenta de Slack</p>
+
+        {loginError && <div className="auth-error">{loginError}</div>}
+
+        <form onSubmit={submitForm}>
+          <div className="auth-form-group">
+            <label htmlFor="email" className="auth-form-label">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              className="auth-form-input"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {touched.email && errors.email && <div className="auth-form-error">{errors.email}</div>}
+          </div>
+
+          <div className="auth-form-group">
+            <label htmlFor="password" className="auth-form-label">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              className="auth-form-input"
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              autocomplete="current-password"
+            />
+            {touched.password && errors.password && <div className="auth-form-error">{errors.password}</div>}
+          </div>
+
+          <button type="submit" className="auth-form-button" disabled={isSubmitting}>
+            {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
+          </button>
+
+          <div className="auth-form-footer">
+            <p>
+              ¿No tienes una cuenta? <Link to="/register">Regístrate</Link>
+            </p>
+            <p>
+              <Link to="/reset-password">¿Olvidaste tu contraseña?</Link>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+export default LoginScreen
+

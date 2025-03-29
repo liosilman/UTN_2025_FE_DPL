@@ -1,131 +1,204 @@
-import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { useApiRequest } from "../hooks/useApiRequest";
-import ENVIROMENT from "../config/enviroment";
-import ServerError from "../utils/error.utils";
-import { AuthContext } from "../context/AuthContext";  // Importamos el contexto
+"use client"
 
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../Context/AuthContext"
+import { useForm } from "../hooks/useForm"
+import "../styles/Auth.css"
+
+/**
+ * Pantalla de registro
+ * @returns {JSX.Element} - Componente
+ */
 const RegisterScreen = () => {
-    const navigate = useNavigate();
-    const { responseApiState, postRequest } = useApiRequest(ENVIROMENT.URL_API);
-    const { login } = useContext(AuthContext);  // Accedemos a la función login del contexto
-    const [formState, setFormState] = useState({
-        email: "",
-        username: "",
-        password: "",
-        profile_img_base64: "", // Puedes manejarlo como un archivo o una cadena base64
-    });
-    const [errorMessage, setErrorMessage] = useState(null); // Para mostrar errores en la UI
+    const { register } = useAuth()
+    const navigate = useNavigate()
+    const [registerError, setRegisterError] = useState(null)
+    const [registerSuccess, setRegisterSuccess] = useState(false)
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormState((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
+    /**
+     * Valida el formulario de registro
+     * @param {Object} values - Valores del formulario
+     * @returns {Object} - Errores de validación
+     */
+    const validateForm = (values) => {
+        const errors = {}
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setErrorMessage(null); // Limpiar mensaje de error previo
-
-        try {
-            await postRequest('/auth/register', formState); // Llamamos al postRequest con los datos del formulario
-
-            // Si la respuesta es correcta y tenemos un token
-            if (responseApiState.data && responseApiState.data.ok) {
-                const token = responseApiState.data.data?.authorization_token;
-                if (token) {
-                    login(token); // Guardamos el token en el contexto
-                    navigate("/workspaces"); // Redirige a la página de workspaces
-                } else {
-                    setErrorMessage("Token de autenticación no recibido.");
-                }
-            }
-        } catch (error) {
-            // Manejo de errores
-            if (error instanceof ServerError) {
-                setErrorMessage(error.message);
-            } else {
-                setErrorMessage('Hubo un error inesperado. Inténtalo de nuevo.');
-            }
+        if (!values.username) {
+            errors.username = "El nombre de usuario es obligatorio"
+        } else if (values.username.length < 3) {
+            errors.username = "El nombre de usuario debe tener al menos 3 caracteres"
         }
-    };
+
+        if (!values.email) {
+            errors.email = "El email es obligatorio"
+        } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+            errors.email = "Email inválido"
+        }
+
+        if (!values.password) {
+            errors.password = "La contraseña es obligatoria"
+        } else if (values.password.length < 6) {
+            errors.password = "La contraseña debe tener al menos 6 caracteres"
+        }
+
+        if (values.password !== values.confirmPassword) {
+            errors.confirmPassword = "Las contraseñas no coinciden"
+        }
+
+        return errors
+    }
+
+    /**
+     * Maneja el envío del formulario
+     * @param {Object} values - Valores del formulario
+     */
+    const handleSubmit = async (values) => {
+        try {
+            await register({
+                username: values.username,
+                email: values.email,
+                password: values.password,
+            })
+
+            setRegisterSuccess(true)
+            setTimeout(() => {
+                navigate("/login")
+            }, 3000)
+        } catch (error) {
+            setRegisterError("Error al registrar usuario")
+        }
+    }
+
+    const {
+        values,
+        errors,
+        touched,
+        isSubmitting,
+        handleChange,
+        handleBlur,
+        handleSubmit: submitForm,
+    } = useForm({ username: "", email: "", password: "", confirmPassword: "" }, handleSubmit, validateForm)
+
+    if (registerSuccess) {
+        return (
+            <div className="auth-container">
+                <div className="auth-form">
+                    <div className="auth-logo">
+                        <img src="https://a.slack-edge.com/bv1-10/slack_logo-ebd02d1.svg" alt="Slack" />
+                    </div>
+
+                    <h1 className="auth-title">¡Registro exitoso!</h1>
+                    <p className="auth-subtitle">
+                        Te hemos enviado un correo electrónico para verificar tu cuenta. Serás redirigido a la página de inicio de
+                        sesión en unos segundos.
+                    </p>
+
+                    <div className="auth-form-footer">
+                        <p>
+                            <Link to="/login">Ir a inicio de sesión</Link>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     return (
-        <div>
-            <h1>Registro de Usuario</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formState.email}
-                        onChange={handleInputChange}
-                        required
-                    />
+        <div className="auth-container">
+            <div className="auth-form">
+                <div className="auth-logo">
+                    <img src="https://a.slack-edge.com/bv1-10/slack_logo-ebd02d1.svg" alt="Slack" />
                 </div>
 
-                <div>
-                    <label htmlFor="username">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={formState.username}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
+                <h1 className="auth-title">Crea tu cuenta de Slack</h1>
+                <p className="auth-subtitle">Regístrate para comenzar</p>
 
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formState.password}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
+                {registerError && <div className="auth-error">{registerError}</div>}
 
-                <div>
-                    <label htmlFor="profile_img_base64">Profile Image</label>
-                    <input
-                        type="file"
-                        id="profile_img_base64"
-                        name="profile_img_base64"
-                        onChange={(e) => {
-                            const file = e.target.files[0];
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                setFormState((prevState) => ({
-                                    ...prevState,
-                                    profile_img_base64: reader.result,
-                                }));
-                            };
-                            reader.readAsDataURL(file);
-                        }}
-                    />
-                </div>
+                <form onSubmit={submitForm}>
+                    <div className="auth-form-group">
+                        <label htmlFor="username" className="auth-form-label">
+                            Nombre de usuario
+                        </label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            className="auth-form-input"
+                            value={values.username}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {touched.username && errors.username && <div className="auth-form-error">{errors.username}</div>}
+                    </div>
 
-                {responseApiState.loading ? (
-                    <span>Registrando...</span>
-                ) : (
-                    <button type="submit">Registrar</button>
-                )}
+                    <div className="auth-form-group">
+                        <label htmlFor="email" className="auth-form-label">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            className="auth-form-input"
+                            value={values.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        {touched.email && errors.email && <div className="auth-form-error">{errors.email}</div>}
+                    </div>
 
-                {errorMessage && <span style={{ color: "red" }}>{errorMessage}</span>}
-            </form>
+                    <div className="auth-form-group">
+                        <label htmlFor="password" className="auth-form-label">
+                            Contraseña
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            className="auth-form-input"
+                            value={values.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            autocomplete="new-password"
+                        />
+                        {touched.password && errors.password && <div className="auth-form-error">{errors.password}</div>}
+                    </div>
 
-            <div>
-                <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+                    <div className="auth-form-group">
+                        <label htmlFor="confirmPassword" className="auth-form-label">
+                            Confirmar contraseña
+                        </label>
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            className="auth-form-input"
+                            value={values.confirmPassword}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            autocomplete="new-password"
+                        />
+                        {touched.confirmPassword && errors.confirmPassword && (
+                            <div className="auth-form-error">{errors.confirmPassword}</div>
+                        )}
+                    </div>
+
+                    <button type="submit" className="auth-form-button" disabled={isSubmitting}>
+                        {isSubmitting ? "Registrando..." : "Registrarse"}
+                    </button>
+
+                    <div className="auth-form-footer">
+                        <p>
+                            ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión</Link>
+                        </p>
+                    </div>
+                </form>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default RegisterScreen;
+export default RegisterScreen
+

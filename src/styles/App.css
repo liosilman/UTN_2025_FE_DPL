@@ -1,0 +1,122 @@
+:root {
+  --slack-color-primary: #4a154b;
+  --slack-color-secondary: #611f69;
+  --slack-color-accent: #36c5f0;
+  --slack-color-accent-2: #2eb67d;
+  --slack-color-accent-3: #ecb22e;
+  --slack-color-accent-4: #e01e5a;
+  --slack-color-text: #1d1c1d;
+  --slack-color-text-light: #616061;
+  --slack-color-border: #ddd;
+  --slack-color-bg: #fff;
+  --slack-color-bg-secondary: #f8f8f8;
+  --slack-color-bg-hover: #f6f6f6;
+  --slack-color-bg-active: #1164a3;
+  --slack-color-bg-mention: #fff8e2;
+  --slack-color-error: #e01e5a;
+  --slack-color-success: #2eb67d;
+  --slack-font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --slack-border-radius: 4px;
+  --slack-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  --slack-transition: all 0.2s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--slack-font-family);
+  color: var(--slack-color-text);
+  background-color: var(--slack-color-bg);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--slack-color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--slack-font-family);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  border-radius: var(--slack-border-radius);
+  transition: var(--slack-transition);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--slack-color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--slack-color-secondary);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: var(--slack-color-primary);
+  border: 1px solid var(--slack-color-border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--slack-color-bg-hover);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid var(--slack-color-border);
+  border-radius: var(--slack-border-radius);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--slack-color-accent);
+}
+
+.error-message {
+  color: var(--slack-color-error);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.success-message {
+  color: var(--slack-color-success);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 10px;
+  }
+}

@@ -1,37 +1,64 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import LoginScreen from './Screens/LoginScreen';
-import RegisterScreen from './Screens/RegisterScreen';
-import ResetPasswordScreen from './Screens/ResetPasswordScreen';
-import RewritePasswordScreen from './Screens/RewritePasswordScreen';
-import WorkspacesScreen from './Screens/WorkspacesScreen';
-import ChannelsScreen from './Screens/ChannelsScreen';
-import MessagesScreen from './Screens/MessagesScreen';
-import ProtectedRoute from './Components/ProtectedRoute';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
+import { AuthProvider } from "./Context/AuthContext"
+import ProtectedRoute from "./Components/ProtectedRoute"
+import LoginScreen from "./Screens/LoginScreen"
+import RegisterScreen from "./Screens/RegisterScreen"
+import ResetPasswordScreen from "./Screens/ResetPasswordScreen"
+import WorkspacesScreen from "./Screens/WorkspacesScreen"
+import ChannelsScreen from "./Screens/ChannelsScreen"
+import ChannelView from "./Components/ChannelView"  // Asegúrate de importar ChannelView
+import ProfileScreen from "./Screens/ProfileScreen"
+import MainLayout from "./Components/MainLayout"  // Importar MainLayout
+import "./styles/App.css"
 
 function App() {
   return (
-    <div>
-      <Routes>
-        {/* Rutas públicas */}
-        <Route path="/login" element={<LoginScreen />} />
-        <Route path="/register" element={<RegisterScreen />} />
-        <Route path="/reset-password" element={<ResetPasswordScreen />} />
-        <Route path="/rewrite-password" element={<RewritePasswordScreen />} />
-        <Route path="/" element={<LoginScreen />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Rutas públicas */}
+          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/register" element={<RegisterScreen />} />
+          <Route path="/reset-password" element={<ResetPasswordScreen />} />
 
-        {/* Rutas protegidas */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/workspaces" element={<WorkspacesScreen />} />
-          <Route path="/workspaces/:workspace_id/channels" element={<ChannelsScreen />} />
-          <Route path="/workspaces/:workspace_id/channels/:channel_id/messages" element={<MessagesScreen />} />
-        </Route>
+          {/* Rutas protegidas */}
+          <Route
+            path="/workspaces"
+            element={
+              <ProtectedRoute>
+                <WorkspacesScreen />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Ruta para páginas no encontradas */}
-        <Route path="*" element={<div>Página no encontrada</div>} />
-      </Routes>
-    </div>
-  );
+          <Route
+            path="/workspaces/:workspaceId"
+            element={
+              <ProtectedRoute>
+                <MainLayout /> {/* Agregar MainLayout aquí */}
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/workspaces/:workspaceId" element={<ChannelsScreen />} />
+            <Route path="/workspaces/:workspaceId/channels/:channelId" element={<ChannelView />} />
+          </Route>
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfileScreen />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Redirección por defecto */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  )
 }
 
-export default App;
+export default App

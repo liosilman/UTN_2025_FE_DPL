@@ -1,0 +1,21 @@
+.main-layout {
+  display: flex;
+  height: 100vh;
+  overflow: auto; /* Permite el desplazamiento si el contenido excede el tamaño de la pantalla */
+  min-width: 100vw; /* Asegura que el contenedor no sea más pequeño que el ancho de la pantalla */
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto; /* Permite desplazamiento en el contenido principal */
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 768px) {
+  .main-layout {
+    flex-direction: column;
+    overflow: auto; /* Asegura que el contenido se puede desplazar */
+  }
+}
