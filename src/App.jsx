@@ -6,9 +6,10 @@ import RegisterScreen from "./Screens/RegisterScreen"
 import ResetPasswordScreen from "./Screens/ResetPasswordScreen"
 import WorkspacesScreen from "./Screens/WorkspacesScreen"
 import ChannelsScreen from "./Screens/ChannelsScreen"
-import ChannelView from "./Components/ChannelView"  // Asegúrate de importar ChannelView
+import ChannelView from "./Components/ChannelView"
+import DirectMessageView from "./Components/DirectMessageView"
 import ProfileScreen from "./Screens/ProfileScreen"
-import MainLayout from "./Components/MainLayout"  // Importar MainLayout
+import MainLayout from "./Components/MainLayout"
 import "./styles/App.css"
 
 function App() {
@@ -31,26 +32,36 @@ function App() {
             }
           />
 
-          <Route
-            path="/workspaces/:workspaceId"
-            element={
-              <ProtectedRoute>
-                <MainLayout /> {/* Agregar MainLayout aquí */}
-              </ProtectedRoute>
-            }
-          >
-            <Route path="/workspaces/:workspaceId" element={<ChannelsScreen />} />
-            <Route path="/workspaces/:workspaceId/channels/:channelId" element={<ChannelView />} />
-          </Route>
-
+          {/* Ruta de perfil */}
           <Route
             path="/profile"
             element={
               <ProtectedRoute>
-                <ProfileScreen />
+                <MainLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<ProfileScreen />} />
+          </Route>
+
+          {/* Rutas de workspace con MainLayout */}
+          <Route
+            path="/workspaces/:workspaceId"
+            element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            }
+          >
+            {/* Ruta principal del workspace muestra los canales */}
+            <Route index element={<ChannelsScreen />} />
+
+            {/* Ruta de canal específico */}
+            <Route path="channels/:channelId" element={<ChannelView />} />
+
+            {/* Ruta de mensajes directos */}
+            <Route path="dm/:userId" element={<DirectMessageView />} />
+          </Route>
 
           {/* Redirección por defecto */}
           <Route path="/" element={<Navigate to="/login" replace />} />
@@ -62,3 +73,4 @@ function App() {
 }
 
 export default App
+

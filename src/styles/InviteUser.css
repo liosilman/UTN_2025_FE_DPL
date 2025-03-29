@@ -1,0 +1,195 @@
+.invite-user-form {
+  background-color: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.invite-user-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--slack-color-primary);
+}
+
+.invite-user-form-group {
+  margin-bottom: 16px;
+}
+
+.invite-user-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.invite-user-search {
+  display: flex;
+  gap: 8px;
+}
+
+.invite-user-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--slack-color-border);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.invite-user-input:focus {
+  outline: none;
+  border-color: var(--slack-color-accent);
+}
+
+.invite-user-search-button {
+  padding: 10px 16px;
+  background-color: var(--slack-color-accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.invite-user-search-button:hover {
+  background-color: #2aabd2;
+}
+
+.invite-user-search-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.invite-user-results {
+  margin-bottom: 20px;
+  border: 1px solid var(--slack-color-border);
+  border-radius: 4px;
+  padding: 12px;
+  background-color: var(--slack-color-bg-secondary);
+}
+
+.invite-user-results-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--slack-color-text);
+}
+
+.invite-user-results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.invite-user-result {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 4px;
+}
+
+.invite-user-result:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.invite-user-result.selected {
+  background-color: rgba(54, 197, 240, 0.1);
+  border: 1px solid var(--slack-color-accent);
+}
+
+.invite-user-result-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background-color: var(--slack-color-accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  margin-right: 12px;
+}
+
+.invite-user-result-info {
+  flex: 1;
+}
+
+.invite-user-result-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.invite-user-result-email {
+  font-size: 12px;
+  color: var(--slack-color-text-light);
+}
+
+.invite-user-result-selected {
+  color: var(--slack-color-accent);
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.invite-user-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.invite-user-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.invite-user-button.cancel {
+  background-color: transparent;
+  border: 1px solid var(--slack-color-border);
+  color: var(--slack-color-text);
+}
+
+.invite-user-button.cancel:hover {
+  background-color: var(--slack-color-bg-hover);
+}
+
+.invite-user-button.submit {
+  background-color: var(--slack-color-primary);
+  border: none;
+  color: white;
+}
+
+.invite-user-button.submit:hover {
+  background-color: var(--slack-color-secondary);
+}
+
+.invite-user-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.invite-user-success {
+  background-color: rgba(46, 182, 125, 0.1);
+  color: var(--slack-color-success);
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.invite-user-error {
+  background-color: rgba(224, 30, 90, 0.1);
+  color: var(--slack-color-error);
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+

@@ -19,11 +19,13 @@
   min-height: 44px;
   max-height: 120px;
   overflow-y: auto;
+  transition: border-color 0.2s;
 }
 
 .message-input-field:focus {
   outline: none;
   border-color: var(--slack-color-accent);
+  box-shadow: 0 0 0 1px var(--slack-color-accent);
 }
 
 .message-input-actions {
@@ -42,9 +44,17 @@
   cursor: pointer;
   padding: 0;
   margin-left: 8px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .message-input-button:hover {
+  background-color: var(--slack-color-bg-secondary);
   color: var(--slack-color-accent-4);
 }
 
@@ -63,13 +73,40 @@
   background-color: transparent;
   border: none;
   color: var(--slack-color-text-light);
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
-  padding: 4px;
+  padding: 4px 8px;
   margin-right: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .message-input-formatting-button:hover {
+  background-color: var(--slack-color-bg-secondary);
   color: var(--slack-color-text);
+}
+
+.message-input-error {
+  color: var(--slack-color-error);
+  font-size: 14px;
+  margin-bottom: 8px;
+  padding: 8px;
+  background-color: rgba(224, 30, 90, 0.1);
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .message-input {
+    padding: 10px;
+  }
+
+  .message-input-field {
+    padding: 8px;
+    min-height: 36px;
+  }
+
+  .message-input-formatting {
+    display: none;
+  }
 }
 

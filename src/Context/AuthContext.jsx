@@ -131,7 +131,17 @@ export const AuthProvider = ({ children }) => {
     setError(null)
 
     try {
-      await post(ROUTES.AUTH.REWRITE_PASSWORD, { password, reset_token })
+      console.log("Enviando solicitud de restablecimiento con token:", reset_token)
+      const response = await post(ROUTES.AUTH.REWRITE_PASSWORD, {
+        password,
+        reset_token,
+      })
+
+      console.log("Respuesta de restablecimiento:", response)
+
+      if (!response || response.error) {
+        throw new Error(response?.error || "Error al restablecer contraseña")
+      }
     } catch (error) {
       console.error("Error al restablecer contraseña:", error)
       setError(error.message || "Error al restablecer contraseña")

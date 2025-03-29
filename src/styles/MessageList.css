@@ -8,6 +8,13 @@
 .message {
   display: flex;
   margin-bottom: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.message:hover {
+  background-color: var(--slack-color-bg-secondary);
 }
 
 .message-avatar {
@@ -26,6 +33,7 @@
 
 .message-content {
   flex: 1;
+  min-width: 0; /* Permite que el contenido se encoja correctamente */
 }
 
 .message-header {
@@ -37,6 +45,7 @@
 .message-sender {
   font-weight: 700;
   margin-right: 8px;
+  color: var(--slack-color-text);
 }
 
 .message-time {
@@ -48,6 +57,7 @@
   font-size: 15px;
   line-height: 1.5;
   white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .message-day-divider {
@@ -92,10 +102,40 @@
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 8px;
+  color: var(--slack-color-text);
 }
 
 .message-list-empty-text {
   font-size: 14px;
   max-width: 400px;
+  line-height: 1.5;
+}
+
+.message-list-loading,
+.message-list-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+}
+
+.message-list-loading .loading-spinner {
+  margin-bottom: 16px;
+}
+
+.message-list-error {
+  color: var(--slack-color-error);
+}
+
+.message-list-error button {
+  margin-top: 16px;
+  padding: 8px 16px;
+  background-color: var(--slack-color-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 

@@ -50,6 +50,7 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
+  color: var(--slack-color-text);
 }
 
 .auth-form-input {
@@ -58,11 +59,13 @@
   border: 1px solid var(--slack-color-border);
   border-radius: 4px;
   font-size: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .auth-form-input:focus {
   outline: none;
   border-color: var(--slack-color-accent);
+  box-shadow: 0 0 0 1px var(--slack-color-accent);
 }
 
 .auth-form-button {
@@ -107,6 +110,9 @@
   margin-bottom: 20px;
   text-align: center;
   font-size: 14px;
+  padding: 10px;
+  background-color: rgba(224, 30, 90, 0.1);
+  border-radius: 4px;
 }
 
 .auth-success {
@@ -114,10 +120,30 @@
   margin-bottom: 20px;
   text-align: center;
   font-size: 14px;
+  padding: 10px;
+  background-color: rgba(46, 182, 125, 0.1);
+  border-radius: 4px;
+}
+
+.auth-form-error {
+  color: var(--slack-color-error);
+  font-size: 12px;
+  margin-top: 5px;
 }
 
 @media (max-width: 480px) {
   .auth-form {
     padding: 20px;
   }
+
+  .auth-form-input {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .auth-form-button {
+    padding: 10px;
+    font-size: 14px;
+  }
 }
+

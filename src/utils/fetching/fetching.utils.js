@@ -18,6 +18,8 @@ export const fetchApi = async (endpoint, options = {}) => {
       defaultHeaders["Authorization"] = `Bearer ${token}`
     }
 
+    console.log(`Realizando petición a ${ENVIROMENT.URL_API}${endpoint}`, options)
+
     const response = await fetch(`${ENVIROMENT.URL_API}${endpoint}`, {
       ...options,
       headers: {
@@ -26,7 +28,18 @@ export const fetchApi = async (endpoint, options = {}) => {
       },
     })
 
+    // Verificar si la respuesta es JSON
+    const contentType = response.headers.get("content-type")
+    if (!contentType || !contentType.includes("application/json")) {
+      // Si no es JSON, intentar obtener el texto para mejor diagnóstico
+      const text = await response.text()
+      console.error("Respuesta no JSON:", text)
+      throw new Error("La respuesta del servidor no es JSON válido")
+    }
+
     const data = await response.json()
+
+    console.log(`Respuesta de ${endpoint}:`, data)
 
     if (!response.ok) {
       throw new Error(data.message || "Ha ocurrido un error")

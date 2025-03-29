@@ -39,6 +39,14 @@ const Header = ({ channelName = "", channelInfo = "", workspaceId = "", channelI
   }
 
   /**
+   * Maneja la navegación a workspaces
+   */
+  const handleWorkspacesClick = () => {
+    navigate("/workspaces")
+    setShowUserMenu(false)
+  }
+
+  /**
    * Obtiene las iniciales del nombre de usuario
    * @returns {string} - Iniciales del nombre de usuario
    */
@@ -77,6 +85,9 @@ const Header = ({ channelName = "", channelInfo = "", workspaceId = "", channelI
             <div className="header-user-menu">
               <div className="header-user-menu-item" onClick={handleProfileClick}>
                 Perfil
+              </div>
+              <div className="header-user-menu-item" onClick={handleWorkspacesClick}>
+                Workspaces
               </div>
               <div className="header-user-menu-item" onClick={handleLogout}>
                 Cerrar sesión

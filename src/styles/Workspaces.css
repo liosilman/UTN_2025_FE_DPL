@@ -2,6 +2,9 @@
   padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
+  height: auto;
+  min-height: 100%;
+  overflow-y: visible;
 }
 
 .workspaces-header {
@@ -14,6 +17,7 @@
 .workspaces-title {
   font-size: 24px;
   font-weight: 700;
+  color: var(--slack-color-primary);
 }
 
 .workspaces-actions {
@@ -32,6 +36,8 @@
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
+  background-color: white;
+  cursor: pointer;
 }
 
 .workspace-card:hover {
@@ -74,6 +80,7 @@
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 4px;
+  color: var(--slack-color-primary);
 }
 
 .workspace-card-stat-label {
@@ -85,13 +92,17 @@
   padding: 16px;
   border-top: 1px solid var(--slack-color-border);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .workspace-empty {
   text-align: center;
   padding: 48px 0;
   color: var(--slack-color-text-light);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .workspace-empty-icon {
@@ -104,6 +115,7 @@
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 8px;
+  color: var(--slack-color-text);
 }
 
 .workspace-empty-text {
@@ -111,6 +123,49 @@
   max-width: 500px;
   margin: 0 auto;
   margin-bottom: 24px;
+}
+
+.workspaces-create-form {
+  background-color: white;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.workspaces-create-form h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--slack-color-primary);
+}
+
+.workspaces-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.workspaces-loading,
+.workspaces-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  text-align: center;
+}
+
+.workspaces-loading .loading-spinner {
+  margin-bottom: 16px;
+}
+
+.workspaces-error {
+  color: var(--slack-color-error);
+  background-color: white;
+  border-radius: 8px;
+  padding: 24px;
 }
 
 @media (max-width: 768px) {
@@ -127,5 +182,33 @@
   .workspaces-actions .btn {
     flex: 1;
   }
+
+  .workspaces-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-card-footer {
+    flex-direction: column;
+  }
+
+  .workspace-card-footer .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .workspaces-container {
+    padding: 16px;
+  }
+
+  .workspace-card-stats {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Asegurar que el contenedor principal permita scroll */
+.main-content {
+  overflow-y: auto;
 }
 

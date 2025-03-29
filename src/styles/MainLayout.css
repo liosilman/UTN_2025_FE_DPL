@@ -1,21 +1,33 @@
 .main-layout {
   display: flex;
   height: 100vh;
-  overflow: auto; /* Permite el desplazamiento si el contenido excede el tamaño de la pantalla */
-  min-width: 100vw; /* Asegura que el contenedor no sea más pequeño que el ancho de la pantalla */
+  width: 100%;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.main-content-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
 }
 
 .main-content {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: auto; /* Permite desplazamiento en el contenido principal */
+  overflow-y: auto;
+  position: relative;
+  background-color: #ffffff;
+  height: 100vh;
 }
 
 /* Para pantallas pequeñas */
 @media (max-width: 768px) {
   .main-layout {
-    flex-direction: column;
-    overflow: auto; /* Asegura que el contenido se puede desplazar */
+    padding-left: 50px; /* Espacio para la barra de navegación de workspaces */
+  }
+
+  .main-content {
+    width: 100%;
   }
 }
+

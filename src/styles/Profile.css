@@ -2,11 +2,37 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 24px;
+  height: auto;
+  min-height: 100%;
+  overflow-y: visible;
+  padding-bottom: 60px; /* Añadir espacio adicional al final */
+}
+
+/* Añadir esta regla para asegurar que el contenedor principal permita scroll */
+.main-content {
+  overflow-y: auto;
+}
+
+.profile-back-button {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  background-color: var(--slack-color-bg-secondary);
+  border: 1px solid var(--slack-color-border);
+  border-radius: 4px;
+  color: var(--slack-color-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.profile-back-button:hover {
+  background-color: var(--slack-color-bg-hover);
 }
 
 .profile-header {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   margin-bottom: 32px;
 }
 
@@ -22,6 +48,7 @@
   font-size: 36px;
   font-weight: 700;
   margin-right: 24px;
+  margin-bottom: 16px;
 }
 
 .profile-info {
@@ -44,6 +71,7 @@
   display: flex;
   align-items: center;
   font-size: 14px;
+  margin-bottom: 16px;
 }
 
 .profile-status-indicator {
@@ -62,6 +90,10 @@
 
 .profile-section {
   margin-bottom: 32px;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .profile-section-title {
@@ -70,6 +102,32 @@
   margin-bottom: 16px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--slack-color-border);
+  color: var(--slack-color-primary);
+}
+
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.profile-info-item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background-color: var(--slack-color-bg-secondary);
+  border-radius: 4px;
+}
+
+.profile-info-label {
+  font-size: 12px;
+  color: var(--slack-color-text-light);
+  margin-bottom: 4px;
+}
+
+.profile-info-value {
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .profile-form-group {
@@ -95,10 +153,33 @@
   border-color: var(--slack-color-accent);
 }
 
+.profile-form-error {
+  color: var(--slack-color-error);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+@media (min-width: 768px) {
+  .profile-header {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .profile-avatar {
+    margin-bottom: 0;
+  }
+}
+
 @media (max-width: 768px) {
+  .profile-container {
+    padding: 16px;
+    padding-bottom: 60px;
+  }
+
   .profile-header {
     flex-direction: column;
     text-align: center;
+    align-items: center;
   }
 
   .profile-avatar {
@@ -108,6 +189,10 @@
 
   .profile-actions {
     justify-content: center;
+  }
+
+  .profile-info-grid {
+    grid-template-columns: 1fr;
   }
 }
 
