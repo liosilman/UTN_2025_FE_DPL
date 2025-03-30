@@ -1,10 +1,15 @@
+/* Contenedor principal para la pantalla de workspaces con scroll */
+.workspaces-screen {
+  height: 100vh;
+  overflow-y: auto;
+  background-color: var(--slack-color-bg);
+}
+
 .workspaces-container {
   padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
-  height: auto;
-  min-height: 100%;
-  overflow-y: visible;
+  padding-bottom: 60px; /* Añadir espacio adicional al final */
 }
 
 .workspaces-header {
@@ -207,8 +212,25 @@
   }
 }
 
-/* Asegurar que el contenedor principal permita scroll */
-.main-content {
-  overflow-y: auto;
+/* Estilos para pantallas muy pequeñas */
+@media (max-width: 320px) {
+  .workspaces-container {
+    padding: 10px;
+  }
+
+  .workspace-card {
+    min-width: 280px;
+  }
+}
+
+/* Estilos para pantallas muy grandes */
+@media (min-width: 1800px) {
+  .workspaces-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+
+  .workspaces-container {
+    max-width: 1800px;
+  }
 }
 

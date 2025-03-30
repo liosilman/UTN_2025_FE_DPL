@@ -29,11 +29,23 @@ const WorkspacesScreen = () => {
     const fetchWorkspaces = async () => {
       try {
         const response = await get(ROUTES.WORKSPACES.BASE)
-        const workspacesData = response.data.workspaces || []
-        setWorkspaces(workspacesData)
+        const allWorkspaces = response.data.workspaces || []
+
+        // Filtrar solo los workspaces donde el usuario es miembro
+        const userWorkspaces = allWorkspaces.filter((workspace) => {
+          // Verificar si el usuario es propietario
+          if (workspace.owner === user?._id) return true
+
+          // Verificar si el usuario es miembro
+          return (
+            workspace.members && workspace.members.some((member) => member._id === user?._id || member === user?._id)
+          )
+        })
+
+        setWorkspaces(userWorkspaces)
 
         // Cargar detalles de cada workspace para obtener el conteo de canales
-        const detailsPromises = workspacesData.map(async (workspace) => {
+        const detailsPromises = userWorkspaces.map(async (workspace) => {
           try {
             // Obtener canales del workspace
             const channelsResponse = await get(ROUTES.WORKSPACES.CHANNELS(workspace._id))
@@ -67,7 +79,7 @@ const WorkspacesScreen = () => {
     }
 
     fetchWorkspaces()
-  }, [])
+  }, [user])
 
   /**
    * Valida el formulario de creación de workspace
@@ -166,11 +178,23 @@ const WorkspacesScreen = () => {
     const fetchWorkspaces = async () => {
       try {
         const response = await get(ROUTES.WORKSPACES.BASE)
-        const workspacesData = response.data.workspaces || []
-        setWorkspaces(workspacesData)
+        const allWorkspaces = response.data.workspaces || []
+
+        // Filtrar solo los workspaces donde el usuario es miembro
+        const userWorkspaces = allWorkspaces.filter((workspace) => {
+          // Verificar si el usuario es propietario
+          if (workspace.owner === user?._id) return true
+
+          // Verificar si el usuario es miembro
+          return (
+            workspace.members && workspace.members.some((member) => member._id === user?._id || member === user?._id)
+          )
+        })
+
+        setWorkspaces(userWorkspaces)
 
         // Actualizar detalles
-        const detailsPromises = workspacesData.map(async (workspace) => {
+        const detailsPromises = userWorkspaces.map(async (workspace) => {
           try {
             const channelsResponse = await get(ROUTES.WORKSPACES.CHANNELS(workspace._id))
             return {
@@ -235,100 +259,104 @@ const WorkspacesScreen = () => {
   }
 
   return (
-    <div className="workspaces-container">
-      <div className="workspaces-header">
-        <h1 className="workspaces-title">Tus espacios de trabajo</h1>
+    <div className="workspaces-screen">
+      <div className="workspaces-container">
+        <div className="workspaces-header">
+          <h1 className="workspaces-title">Tus espacios de trabajo</h1>
 
-        <div className="workspaces-actions">
-          <button className="btn btn-primary" onClick={handleOpenCreateForm}>
-            Crear workspace
-          </button>
+          <div className="workspaces-actions">
+            <button className="btn btn-primary" onClick={handleOpenCreateForm}>
+              Crear workspace
+            </button>
+          </div>
         </div>
-      </div>
 
-      {error && <div className="workspaces-error">{error}</div>}
+        {error && <div className="workspaces-error">{error}</div>}
 
-      {showInviteForm && selectedWorkspaceId && (
-        <InviteUserForm
-          workspaceId={selectedWorkspaceId}
-          onInviteSuccess={handleInviteSuccess}
-          onCancel={handleCloseInviteForm}
-        />
-      )}
+        {showInviteForm && selectedWorkspaceId && (
+          <InviteUserForm
+            workspaceId={selectedWorkspaceId}
+            onInviteSuccess={handleInviteSuccess}
+            onCancel={handleCloseInviteForm}
+          />
+        )}
 
-      {showCreateForm && (
-        <div className="workspaces-create-form">
-          <h2>Crear nuevo workspace</h2>
+        {showCreateForm && (
+          <div className="workspaces-create-form">
+            <h2>Crear nuevo workspace</h2>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Nombre del workspace</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                className="form-control"
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              {touched.name && errors.name && <div className="error-message">{errors.name}</div>}
-            </div>
-
-            <div className="workspaces-form-actions">
-              <button type="button" className="btn btn-secondary" onClick={handleCloseCreateForm}>
-                Cancelar
-              </button>
-              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                {isSubmitting ? "Creando..." : "Crear workspace"}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {workspaces.length === 0 ? (
-        <div className="workspace-empty">
-          <div className="workspace-empty-icon">🏢</div>
-          <h2 className="workspace-empty-title">No tienes workspaces</h2>
-          <p className="workspace-empty-text">Crea tu primer workspace para comenzar a colaborar con tu equipo.</p>
-          <button className="btn btn-primary" onClick={handleOpenCreateForm}>
-            Crear workspace
-          </button>
-        </div>
-      ) : (
-        <div className="workspaces-grid">
-          {workspaces.map((workspace) => (
-            <div key={workspace._id} className="workspace-card" onClick={() => handleWorkspaceClick(workspace._id)}>
-              <div className="workspace-card-header">
-                <h2 className="workspace-card-name">{workspace.name}</h2>
-                <p className="workspace-card-owner">{workspace.owner === user?._id ? "Propietario: Tú" : "Miembro"}</p>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="name">Nombre del workspace</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  className="form-control"
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+                {touched.name && errors.name && <div className="error-message">{errors.name}</div>}
               </div>
 
-              <div className="workspace-card-content">
-                <div className="workspace-card-stats">
-                  <div className="workspace-card-stat">
-                    <div className="workspace-card-stat-value">{getChannelCount(workspace._id)}</div>
-                    <div className="workspace-card-stat-label">Canales</div>
-                  </div>
+              <div className="workspaces-form-actions">
+                <button type="button" className="btn btn-secondary" onClick={handleCloseCreateForm}>
+                  Cancelar
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                  {isSubmitting ? "Creando..." : "Crear workspace"}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
 
-                  <div className="workspace-card-stat">
-                    <div className="workspace-card-stat-value">{getMemberCount(workspace._id)}</div>
-                    <div className="workspace-card-stat-label">Miembros</div>
+        {workspaces.length === 0 ? (
+          <div className="workspace-empty">
+            <div className="workspace-empty-icon">🏢</div>
+            <h2 className="workspace-empty-title">No tienes workspaces</h2>
+            <p className="workspace-empty-text">Crea tu primer workspace para comenzar a colaborar con tu equipo.</p>
+            <button className="btn btn-primary" onClick={handleOpenCreateForm}>
+              Crear workspace
+            </button>
+          </div>
+        ) : (
+          <div className="workspaces-grid">
+            {workspaces.map((workspace) => (
+              <div key={workspace._id} className="workspace-card" onClick={() => handleWorkspaceClick(workspace._id)}>
+                <div className="workspace-card-header">
+                  <h2 className="workspace-card-name">{workspace.name}</h2>
+                  <p className="workspace-card-owner">
+                    {workspace.owner === user?._id ? "Propietario: Tú" : "Miembro"}
+                  </p>
+                </div>
+
+                <div className="workspace-card-content">
+                  <div className="workspace-card-stats">
+                    <div className="workspace-card-stat">
+                      <div className="workspace-card-stat-value">{getChannelCount(workspace._id)}</div>
+                      <div className="workspace-card-stat-label">Canales</div>
+                    </div>
+
+                    <div className="workspace-card-stat">
+                      <div className="workspace-card-stat-value">{getMemberCount(workspace._id)}</div>
+                      <div className="workspace-card-stat-label">Miembros</div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="workspace-card-footer">
-                <button className="btn btn-secondary" onClick={(e) => handleOpenInviteForm(workspace._id, e)}>
-                  Invitar usuario
-                </button>
-                <button className="btn btn-secondary">Ver detalles</button>
+                <div className="workspace-card-footer">
+                  <button className="btn btn-secondary" onClick={(e) => handleOpenInviteForm(workspace._id, e)}>
+                    Invitar usuario
+                  </button>
+                  <button className="btn btn-secondary">Ver detalles</button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

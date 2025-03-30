@@ -84,10 +84,7 @@ const InviteUserForm = ({ workspaceId, onInviteSuccess, onCancel }) => {
     setSelectedUser(user)
   }
 
-  /**
-   * Maneja el envío del formulario
-   * @param {Event} e - Evento de envío
-   */
+  // Modificar la función handleSubmit para usar la ruta correcta
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -103,10 +100,8 @@ const InviteUserForm = ({ workspaceId, onInviteSuccess, onCancel }) => {
       // Invitar al usuario al workspace usando su ID
       console.log(`Invitando al usuario ${selectedUser._id} al workspace ${workspaceId}`)
 
-      // Cambiamos la forma de enviar la invitación para que sea compatible con el backend
-      const response = await post(ROUTES.WORKSPACES.INVITE_USER(workspaceId), {
-        user_id: selectedUser._id,
-      })
+      // Usar la ruta correcta para la invitación
+      const response = await post(ROUTES.WORKSPACES.INVITE(workspaceId, selectedUser._id), {})
 
       console.log("Respuesta de invitación:", response)
 

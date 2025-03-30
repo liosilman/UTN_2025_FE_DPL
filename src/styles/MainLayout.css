@@ -31,3 +31,18 @@
   }
 }
 
+/* Para pantallas muy pequeñas */
+@media (max-width: 320px) {
+  .main-layout {
+    padding-left: 40px;
+  }
+}
+
+/* Para pantallas muy grandes */
+@media (min-width: 1800px) {
+  .main-content {
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+}
+

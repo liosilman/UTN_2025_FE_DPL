@@ -7,7 +7,6 @@ import ResetPasswordScreen from "./Screens/ResetPasswordScreen"
 import WorkspacesScreen from "./Screens/WorkspacesScreen"
 import ChannelsScreen from "./Screens/ChannelsScreen"
 import ChannelView from "./Components/ChannelView"
-import DirectMessageView from "./Components/DirectMessageView"
 import ProfileScreen from "./Screens/ProfileScreen"
 import MainLayout from "./Components/MainLayout"
 import "./styles/App.css"
@@ -59,8 +58,6 @@ function App() {
             {/* Ruta de canal específico */}
             <Route path="channels/:channelId" element={<ChannelView />} />
 
-            {/* Ruta de mensajes directos */}
-            <Route path="dm/:userId" element={<DirectMessageView />} />
           </Route>
 
           {/* Redirección por defecto */}

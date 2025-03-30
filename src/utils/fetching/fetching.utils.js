@@ -18,36 +18,83 @@ export const fetchApi = async (endpoint, options = {}) => {
       defaultHeaders["Authorization"] = `Bearer ${token}`
     }
 
-    console.log(`Realizando petición a ${ENVIROMENT.URL_API}${endpoint}`, options)
-
-    const response = await fetch(`${ENVIROMENT.URL_API}${endpoint}`, {
-      ...options,
-      headers: {
-        ...defaultHeaders,
-        ...options.headers,
-      },
+    const url = `${ENVIROMENT.URL_API}${endpoint}`
+    console.log(`Realizando petición a ${url}`, {
+      method: options.method || "GET",
+      body: options.body ? JSON.parse(options.body) : undefined,
     })
 
-    // Verificar si la respuesta es JSON
-    const contentType = response.headers.get("content-type")
-    if (!contentType || !contentType.includes("application/json")) {
-      // Si no es JSON, intentar obtener el texto para mejor diagnóstico
-      const text = await response.text()
-      console.error("Respuesta no JSON:", text)
-      throw new Error("La respuesta del servidor no es JSON válido")
+    // Añadir timeout para evitar que la petición se quede colgada indefinidamente
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 segundos de timeout
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          ...defaultHeaders,
+          ...options.headers,
+        },
+        signal: controller.signal,
+      })
+
+      clearTimeout(timeoutId) // Limpiar el timeout si la petición se completa
+
+      // Verificar si la respuesta es JSON
+      const contentType = response.headers.get("content-type")
+      if (!contentType || !contentType.includes("application/json")) {
+        // Si no es JSON, intentar obtener el texto para mejor diagnóstico
+        const text = await response.text()
+        console.error("Respuesta no JSON:", text)
+        console.error("URL:", url)
+        console.error("Método:", options.method)
+        console.error(
+          "Headers:",
+          JSON.stringify({
+            ...defaultHeaders,
+            ...options.headers,
+          }),
+        )
+        console.error("Body:", options.body)
+
+        // Intentar determinar el problema
+        if (text.includes("Cannot POST") || text.includes("Cannot PUT")) {
+          throw new Error(`La ruta ${endpoint} no existe en el servidor o no acepta el método ${options.method}`)
+        } else {
+          throw new Error("La respuesta del servidor no es JSON válido: " + text.substring(0, 100))
+        }
+      }
+
+      const data = await response.json()
+
+      console.log(`Respuesta de ${endpoint}:`, data)
+
+      if (!response.ok) {
+        throw new Error(data.message || "Ha ocurrido un error")
+      }
+
+      return data
+    } catch (error) {
+      clearTimeout(timeoutId) // Asegurarse de limpiar el timeout en caso de error
+
+      if (error.name === "AbortError") {
+        throw new Error(
+          "La petición ha excedido el tiempo de espera. Verifica tu conexión a internet o inténtalo más tarde.",
+        )
+      }
+
+      throw error
     }
-
-    const data = await response.json()
-
-    console.log(`Respuesta de ${endpoint}:`, data)
-
-    if (!response.ok) {
-      throw new Error(data.message || "Ha ocurrido un error")
-    }
-
-    return data
   } catch (error) {
     console.error("Error en fetchApi:", error)
+
+    // Mejorar los mensajes de error para el usuario
+    if (error.message === "Failed to fetch") {
+      throw new Error(
+        "No se pudo conectar con el servidor. Verifica tu conexión a internet o que el servidor esté en funcionamiento.",
+      )
+    }
+
     throw error
   }
 }

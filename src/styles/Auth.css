@@ -8,6 +8,12 @@
   background-color: #f8f8f8;
 }
 
+/* Añadir scroll específicamente para la pantalla de registro */
+.register-container {
+  height: 100vh;
+  overflow-y: auto;
+}
+
 .auth-form {
   width: 100%;
   max-width: 400px;
@@ -15,6 +21,7 @@
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  margin-bottom: 40px; /* Añadir espacio al final */
 }
 
 .auth-logo {
@@ -131,6 +138,44 @@
   margin-top: 5px;
 }
 
+.auth-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 16px;
+}
+
+.auth-invalid-token {
+  text-align: center;
+  padding: 20px;
+  color: var(--slack-color-error);
+}
+
+.auth-link-button {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 8px 16px;
+  background-color: var(--slack-color-primary);
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-link-button:hover {
+  background-color: var(--slack-color-secondary);
+  text-decoration: none;
+}
+
+/* Mejoras de accesibilidad */
+:focus {
+  outline: 2px solid var(--slack-color-accent);
+  outline-offset: 2px;
+}
+
+/* Estilos para pantallas pequeñas */
 @media (max-width: 480px) {
   .auth-form {
     padding: 20px;
@@ -144,6 +189,41 @@
   .auth-form-button {
     padding: 10px;
     font-size: 14px;
+  }
+}
+
+/* Estilos para pantallas muy pequeñas */
+@media (max-width: 320px) {
+  .auth-container {
+    padding: 10px;
+  }
+
+  .auth-form {
+    padding: 15px;
+  }
+
+  .auth-title {
+    font-size: 20px;
+  }
+
+  .auth-subtitle {
+    font-size: 14px;
+  }
+}
+
+/* Estilos para pantallas muy grandes */
+@media (min-width: 1800px) {
+  .auth-form {
+    max-width: 500px;
+    padding: 40px;
+  }
+
+  .auth-title {
+    font-size: 28px;
+  }
+
+  .auth-subtitle {
+    font-size: 18px;
   }
 }
 

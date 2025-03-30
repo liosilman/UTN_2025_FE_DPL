@@ -24,7 +24,20 @@ const WorkspaceNav = () => {
     const fetchWorkspaces = async () => {
       try {
         const response = await get(ROUTES.WORKSPACES.BASE)
-        setWorkspaces(response.data.workspaces || [])
+        const allWorkspaces = response.data.workspaces || []
+
+        // Filtrar solo los workspaces donde el usuario es miembro o propietario
+        const userWorkspaces = allWorkspaces.filter((workspace) => {
+          // Verificar si el usuario es propietario
+          if (workspace.owner === user?._id) return true
+
+          // Verificar si el usuario es miembro
+          return (
+            workspace.members && workspace.members.some((member) => member._id === user?._id || member === user?._id)
+          )
+        })
+
+        setWorkspaces(userWorkspaces)
       } catch (error) {
         console.error("Error al cargar workspaces:", error)
         setError("Error al cargar workspaces")
@@ -34,7 +47,7 @@ const WorkspaceNav = () => {
     }
 
     fetchWorkspaces()
-  }, [])
+  }, [user])
 
   /**
    * Maneja la navegación a un workspace
