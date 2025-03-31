@@ -1,7 +1,7 @@
 // Asegurarse de que la URL de la API sea correcta
 const ENVIROMENT = {
   // Usar una URL de fallback más robusta
-  URL_API: import.meta.env.VITE_URL_API || "http://localhost:3000/api",
+  URL_API: import.meta.env.VITE_URL_API || "https://utn-backend-dpl.onrender.com",
 }
 
 export const ROUTES = {
