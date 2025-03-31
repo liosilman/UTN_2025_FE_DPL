@@ -1,4 +1,3 @@
-"use client"
 
 import { createContext, useState, useEffect, useContext } from "react"
 import { get, post } from "../utils/fetching/fetching.utils"

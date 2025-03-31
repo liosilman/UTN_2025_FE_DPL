@@ -1,5 +1,3 @@
-"use client"
-
 import { useParams } from "react-router-dom"
 import ChannelView from "../Components/ChannelView"
 import DirectMessageView from "../Components/DirectMessageView"

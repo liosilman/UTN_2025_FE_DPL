@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { post } from "../utils/fetching/fetching.utils"
 import { ROUTES } from "../config/enviroment"
