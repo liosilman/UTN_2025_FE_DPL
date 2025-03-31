@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "../Context/AuthContext"
 import { useForm } from "../hooks/useForm"
@@ -21,6 +21,25 @@ const ResetPasswordScreen = () => {
   // Obtener el token de la URL
   const searchParams = new URLSearchParams(location.search)
   const token = searchParams.get("token") || searchParams.get("reset_token")
+
+  // Función para verificar la validez del token
+  const verifyTokenValidity = async (token) => {
+    try {
+      const response = await fetch(`/api/auth/verify-reset-token?token=${token}`)
+      const data = await response.json()
+      if (!data.ok) {
+        throw new Error("Token inválido o expirado")
+      }
+    } catch (error) {
+      setResetError("El token de restablecimiento es inválido o ha expirado.")
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      verifyTokenValidity(token)
+    }
+  }, [token])
 
   /**
    * Valida el formulario de solicitud de restablecimiento
@@ -282,4 +301,3 @@ const ResetPasswordScreen = () => {
 }
 
 export default ResetPasswordScreen
-
