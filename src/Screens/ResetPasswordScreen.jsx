@@ -65,12 +65,7 @@ const ResetPasswordScreen = () => {
 
     try {
       await resetPassword(values.email)
-      // Mostrar mensaje más claro sobre el enlace
       setResetSuccess(true)
-      // Mostrar un mensaje más informativo
-      setResetError(
-        "IMPORTANTE: El enlace de restablecimiento se enviará a tu correo. Cuando lo recibas, copia el token de la URL y pégalo manualmente en esta página si te redirige a localhost.",
-      )
     } catch (error) {
       console.error("Error al solicitar reseteo:", error)
       setResetError("Error al solicitar el reseteo de contraseña. Inténtalo de nuevo.")
@@ -134,9 +129,9 @@ const ResetPasswordScreen = () => {
     handleChange: handleResetChange,
     handleBlur: handleResetBlur,
     handleSubmit: submitResetForm,
-  } = useForm({ password: "", confirmPassword: "" }, handleResetSubmit, validateResetForm)
+  } = useForm({ password: "", confirmPassword: "", manualToken: "" }, handleResetSubmit, validateResetForm)
 
-  if (resetSuccess) {
+  if (resetSuccess && !token) {
     return (
       <div className="auth-container">
         <div className="auth-form">
@@ -144,17 +139,39 @@ const ResetPasswordScreen = () => {
             <img src="https://a.slack-edge.com/bv1-10/slack_logo-ebd02d1.svg" alt="Slack" />
           </div>
 
-          <h1 className="auth-title">{!token ? "¡Solicitud enviada!" : "¡Contraseña actualizada!"}</h1>
+          <h1 className="auth-title">¡Solicitud enviada!</h1>
 
           <p className="auth-subtitle">
-            {!token
-              ? "Revisa tu email para continuar con el proceso. Si el enlace te lleva a localhost, copia el token de la URL y pégalo manualmente en esta página."
-              : "Redirigiendo a inicio de sesión..."}
+            Revisa tu email para continuar con el proceso de restablecimiento de contraseña.
           </p>
 
           <div className="auth-form-footer">
             <Link to="/login" className="auth-link">
               Volver a inicio de sesión
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (resetSuccess && token) {
+    return (
+      <div className="auth-container">
+        <div className="auth-form">
+          <div className="auth-logo">
+            <img src="https://a.slack-edge.com/bv1-10/slack_logo-ebd02d1.svg" alt="Slack" />
+          </div>
+
+          <h1 className="auth-title">¡Contraseña actualizada!</h1>
+
+          <p className="auth-subtitle">
+            Tu contraseña ha sido actualizada correctamente. Serás redirigido a la página de inicio de sesión.
+          </p>
+
+          <div className="auth-form-footer">
+            <Link to="/login" className="auth-link">
+              Ir a inicio de sesión
             </Link>
           </div>
         </div>
@@ -252,28 +269,6 @@ const ResetPasswordScreen = () => {
               {isSubmitting ? "Actualizando..." : "Actualizar contraseña"}
             </button>
           </form>
-        )}
-
-        {!token && resetSuccess && (
-          <div className="auth-form-group" style={{ marginTop: "20px" }}>
-            <label htmlFor="manualToken" className="auth-form-label">
-              ¿Recibiste un enlace que te llevó a localhost? Pega el token aquí:
-            </label>
-            <input
-              type="text"
-              id="manualToken"
-              className="auth-form-input"
-              placeholder="Pega el token de la URL aquí"
-              onChange={(e) => {
-                if (e.target.value) {
-                  window.location.href = `${window.location.origin}${window.location.pathname}?token=${e.target.value}`
-                }
-              }}
-            />
-            <small className="auth-form-help">
-              El token suele estar después de "token=" o "reset_token=" en la URL
-            </small>
-          </div>
         )}
 
         <div className="auth-form-footer">

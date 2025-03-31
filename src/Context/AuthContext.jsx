@@ -1,3 +1,4 @@
+"use client"
 
 import { createContext, useState, useEffect, useContext } from "react"
 import { get, post } from "../utils/fetching/fetching.utils"
@@ -38,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await post(ROUTES.AUTH.LOGIN, { email, password })
-      
+
       if (!response.data?.authorization_token) {
         throw new Error("Authorization token missing")
       }
@@ -79,7 +80,12 @@ export const AuthProvider = ({ children }) => {
     setError(null)
 
     try {
-      await post(ROUTES.AUTH.RESET_PASSWORD, { email })
+      // Incluir la URL base actual para que el backend genere enlaces correctos
+      const currentUrl = window.location.origin
+      await post(ROUTES.AUTH.RESET_PASSWORD, {
+        email,
+        redirect_url: `${currentUrl}/reset-password`,
+      })
     } catch (error) {
       setError(error.response?.data?.message || "Password reset request failed")
       throw error
@@ -97,14 +103,14 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await post(ROUTES.AUTH.REWRITE_PASSWORD, {
           token,
-          password: newPassword
+          password: newPassword,
         })
         return response.data
       } catch (firstError) {
         console.log("Trying alternative payload format...")
         const response = await post(ROUTES.AUTH.REWRITE_PASSWORD, {
           reset_token: token,
-          password: newPassword
+          password: newPassword,
         })
         return response.data
       }
@@ -138,3 +144,4 @@ export const useAuth = () => {
   }
   return context
 }
+
