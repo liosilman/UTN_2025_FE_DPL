@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "../Context/AuthContext"
@@ -63,7 +65,12 @@ const ResetPasswordScreen = () => {
 
     try {
       await resetPassword(values.email)
+      // Mostrar mensaje más claro sobre el enlace
       setResetSuccess(true)
+      // Mostrar un mensaje más informativo
+      setResetError(
+        "IMPORTANTE: El enlace de restablecimiento se enviará a tu correo. Cuando lo recibas, copia el token de la URL y pégalo manualmente en esta página si te redirige a localhost.",
+      )
     } catch (error) {
       console.error("Error al solicitar reseteo:", error)
       setResetError("Error al solicitar el reseteo de contraseña. Inténtalo de nuevo.")
@@ -140,7 +147,9 @@ const ResetPasswordScreen = () => {
           <h1 className="auth-title">{!token ? "¡Solicitud enviada!" : "¡Contraseña actualizada!"}</h1>
 
           <p className="auth-subtitle">
-            {!token ? "Revisa tu email para continuar con el proceso" : "Redirigiendo a inicio de sesión..."}
+            {!token
+              ? "Revisa tu email para continuar con el proceso. Si el enlace te lleva a localhost, copia el token de la URL y pégalo manualmente en esta página."
+              : "Redirigiendo a inicio de sesión..."}
           </p>
 
           <div className="auth-form-footer">
@@ -243,6 +252,28 @@ const ResetPasswordScreen = () => {
               {isSubmitting ? "Actualizando..." : "Actualizar contraseña"}
             </button>
           </form>
+        )}
+
+        {!token && resetSuccess && (
+          <div className="auth-form-group" style={{ marginTop: "20px" }}>
+            <label htmlFor="manualToken" className="auth-form-label">
+              ¿Recibiste un enlace que te llevó a localhost? Pega el token aquí:
+            </label>
+            <input
+              type="text"
+              id="manualToken"
+              className="auth-form-input"
+              placeholder="Pega el token de la URL aquí"
+              onChange={(e) => {
+                if (e.target.value) {
+                  window.location.href = `${window.location.origin}${window.location.pathname}?token=${e.target.value}`
+                }
+              }}
+            />
+            <small className="auth-form-help">
+              El token suele estar después de "token=" o "reset_token=" en la URL
+            </small>
+          </div>
         )}
 
         <div className="auth-form-footer">
