@@ -40,6 +40,21 @@ const ResetPasswordScreen = () => {
   }, [token])
 
   /**
+   * Valida el formulario de solicitud de restablecimiento
+   * @param {Object} values - Valores del formulario
+   * @returns {Object} - Errores de validación
+   */
+  const validateRequestForm = (values) => {
+    const errors = {}
+    if (!values.email) {
+      errors.email = "El email es obligatorio"
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = "Email inválido"
+    }
+    return errors
+  }
+
+  /**
    * Valida el formulario de restablecimiento de contraseña
    * @param {Object} values - Valores del formulario
    * @returns {Object} - Errores de validación
@@ -55,6 +70,25 @@ const ResetPasswordScreen = () => {
       errors.confirmPassword = "Las contraseñas no coinciden"
     }
     return errors
+  }
+
+  /**
+   * Maneja el envío del formulario de solicitud
+   * @param {Object} values - Valores del formulario
+   */
+  const handleRequestSubmit = async (values) => {
+    setIsSubmitting(true)
+    setResetError(null)
+
+    try {
+      await resetPassword(values.email)
+      setResetSuccess(true)
+    } catch (error) {
+      console.error("Error al solicitar reseteo:", error)
+      setResetError("Error al solicitar el reseteo de contraseña. Inténtalo de nuevo.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   /**
@@ -97,13 +131,46 @@ const ResetPasswordScreen = () => {
   }
 
   const {
+    values: requestValues,
+    errors: requestErrors,
+    touched: requestTouched,
+    handleChange: handleRequestChange,
+    handleBlur: handleRequestBlur,
+    handleSubmit: submitRequestForm,
+  } = useForm({ email: "" }, handleRequestSubmit, validateRequestForm)
+
+  const {
     values: resetValues,
     errors: resetErrors,
     touched: resetTouched,
     handleChange: handleResetChange,
     handleBlur: handleResetBlur,
     handleSubmit: submitResetForm,
-  } = useForm({ password: "", confirmPassword: "" }, handleResetSubmit, validateResetForm)
+  } = useForm({ password: "", confirmPassword: "", manualToken: "" }, handleResetSubmit, validateResetForm)
+
+  if (resetSuccess && !token) {
+    return (
+      <div className="auth-container">
+        <div className="auth-form">
+          <div className="auth-logo">
+            <img src="https://a.slack-edge.com/bv1-10/slack_logo-ebd02d1.svg" alt="Slack" />
+          </div>
+
+          <h1 className="auth-title">¡Solicitud enviada!</h1>
+
+          <p className="auth-subtitle">
+            Revisa tu email para continuar con el proceso de restablecimiento de contraseña.
+          </p>
+
+          <div className="auth-form-footer">
+            <Link to="/login" className="auth-link">
+              Volver a inicio de sesión
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   if (resetSuccess && token) {
     return (
@@ -136,9 +203,11 @@ const ResetPasswordScreen = () => {
           <img src="https://a.slack-edge.com/bv1-10/slack_logo-ebd02d1.svg" alt="Slack" />
         </div>
 
-        <h1 className="auth-title">Crear nueva contraseña</h1>
+        <h1 className="auth-title">{!token ? "Restablecer contraseña" : "Crear nueva contraseña"}</h1>
 
-        <p className="auth-subtitle">Crea una nueva contraseña segura</p>
+        <p className="auth-subtitle">
+          {!token ? "Ingresa tu email para recibir instrucciones" : "Crea una nueva contraseña segura"}
+        </p>
 
         {resetError && (
           <div className="auth-error">
@@ -146,51 +215,78 @@ const ResetPasswordScreen = () => {
           </div>
         )}
 
-        <form onSubmit={submitResetForm}>
-          <div className="auth-form-group">
-            <label htmlFor="password" className="auth-form-label">
-              Nueva contraseña
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="auth-form-input"
-              value={resetValues.password}
-              onChange={handleResetChange}
-              onBlur={handleResetBlur}
-              autoComplete="new-password"
-              disabled={isSubmitting}
-            />
-            {resetTouched.password && resetErrors.password && (
-              <div className="auth-form-error">{resetErrors.password}</div>
-            )}
-          </div>
+        {!token ? (
+          <form onSubmit={submitRequestForm}>
+            <div className="auth-form-group">
+              <label htmlFor="email" className="auth-form-label">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className="auth-form-input"
+                value={requestValues.email}
+                onChange={handleRequestChange}
+                onBlur={handleRequestBlur}
+                disabled={isSubmitting}
+              />
+              {requestTouched.email && requestErrors.email && (
+                <div className="auth-form-error">{requestErrors.email}</div>
+              )}
+            </div>
 
-          <div className="auth-form-group">
-            <label htmlFor="confirmPassword" className="auth-form-label">
-              Confirmar contraseña
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              className="auth-form-input"
-              value={resetValues.confirmPassword}
-              onChange={handleResetChange}
-              onBlur={handleResetBlur}
-              autoComplete="new-password"
-              disabled={isSubmitting}
-            />
-            {resetTouched.confirmPassword && resetErrors.confirmPassword && (
-              <div className="auth-form-error">{resetErrors.confirmPassword}</div>
-            )}
-          </div>
+            <button type="submit" className="auth-form-button" disabled={isSubmitting}>
+              {isSubmitting ? "Enviando..." : "Enviar instrucciones"}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={submitResetForm}>
+            <div className="auth-form-group">
+              <label htmlFor="password" className="auth-form-label">
+                Nueva contraseña
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                className="auth-form-input"
+                value={resetValues.password}
+                onChange={handleResetChange}
+                onBlur={handleResetBlur}
+                autoComplete="new-password"
+                disabled={isSubmitting}
+              />
+              {resetTouched.password && resetErrors.password && (
+                <div className="auth-form-error">{resetErrors.password}</div>
+              )}
+            </div>
 
-          <button type="submit" className="auth-form-button" disabled={isSubmitting}>
-            {isSubmitting ? "Actualizando..." : "Actualizar contraseña"}
-          </button>
-        </form>
+            <div className="auth-form-group">
+              <label htmlFor="confirmPassword" className="auth-form-label">
+                Confirmar contraseña
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                className="auth-form-input"
+                value={resetValues.confirmPassword}
+                onChange={handleResetChange}
+                onBlur={handleResetBlur}
+                autoComplete="new-password"
+                disabled={isSubmitting}
+              />
+              {resetTouched.confirmPassword && resetErrors.confirmPassword && (
+                <div className="auth-form-error">{resetErrors.confirmPassword}</div>
+              )}
+            </div>
+
+            <button type="submit" className="auth-form-button" disabled={isSubmitting}>
+              {isSubmitting ? "Actualizando..." : "Actualizar contraseña"}
+            </button>
+          </form>
+        )}
 
         <div className="auth-form-footer">
           <Link to="/login" className="auth-link">
