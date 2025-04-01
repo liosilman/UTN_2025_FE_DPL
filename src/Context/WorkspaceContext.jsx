@@ -21,7 +21,7 @@ export const WorkspaceProvider = ({ children }) => {
 
   const fetchWorkspaces = async () => {
     if (!currentUser) return;
-    
+
     setLoading(true);
     setError(null);
     try {

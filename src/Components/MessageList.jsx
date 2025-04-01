@@ -1,3 +1,4 @@
+"use client"
 
 import { useState, useEffect, useRef } from "react"
 import { get } from "../utils/fetching/fetching.utils"
@@ -14,6 +15,7 @@ const MessageList = ({ workspaceId, channelId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const messagesEndRef = useRef(null)
+  const messageListRef = useRef(null)
 
   // Cargar mensajes del canal
   useEffect(() => {
@@ -40,7 +42,7 @@ const MessageList = ({ workspaceId, channelId }) => {
 
     fetchMessages()
 
-    // Simular actualización periódica de mensajes (en producción usaríamos WebSockets)
+    // Simular actualización periódica de mensajes 
     const interval = setInterval(fetchMessages, 10000)
 
     return () => clearInterval(interval)
@@ -52,6 +54,13 @@ const MessageList = ({ workspaceId, channelId }) => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
     }
   }, [messages])
+
+  // Habilitar desplazamiento suave en iOS
+  useEffect(() => {
+    if (messageListRef.current) {
+      messageListRef.current.style.WebkitOverflowScrolling = "touch"
+    }
+  }, [])
 
   /**
    * Formatea la fecha de un mensaje
@@ -129,7 +138,7 @@ const MessageList = ({ workspaceId, channelId }) => {
   const messageGroups = groupMessagesByDay(messages)
 
   return (
-    <div className="message-list">
+    <div className="message-list" ref={messageListRef}>
       {messageGroups.map((group) => (
         <div key={group.day}>
           <div className="message-day-divider">

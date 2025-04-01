@@ -54,9 +54,6 @@ const InviteUserForm = ({ workspaceId, onInviteSuccess, onCancel }) => {
     try {
       // Buscar usuario por email
       const response = await get(ROUTES.USER.SEARCH_BY_EMAIL(email.trim()))
-
-      console.log("Respuesta de búsqueda:", response)
-
       if (response && response.payload) {
         // Si la respuesta contiene un solo usuario
         const userData = response.payload
@@ -96,14 +93,8 @@ const InviteUserForm = ({ workspaceId, onInviteSuccess, onCancel }) => {
     setError(null)
 
     try {
-      // Invitar al usuario al workspace usando su ID
-      console.log(`Invitando al usuario ${selectedUser._id} al workspace ${workspaceId}`)
-
       // Usar la ruta correcta para la invitación
       const response = await post(ROUTES.WORKSPACES.INVITE(workspaceId, selectedUser._id), {})
-
-      console.log("Respuesta de invitación:", response)
-
       setSuccess(true)
       setEmail("")
       setSelectedUser(null)

@@ -30,7 +30,7 @@
 html,
 body {
   height: 100%;
-  overflow: hidden;
+
 }
 
 body {
@@ -38,10 +38,14 @@ body {
   color: var(--slack-color-text);
   background-color: var(--slack-color-bg);
   line-height: 1.5;
+
+  overflow-y: auto;
 }
 
 #root {
   height: 100%;
+
+  overflow: auto;
 }
 
 a {

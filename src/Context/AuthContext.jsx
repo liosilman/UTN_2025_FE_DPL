@@ -90,9 +90,6 @@ export const AuthProvider = ({ children }) => {
     try {
       // Incluir la URL base actual para que el backend genere enlaces correctos
       const currentUrl = window.location.origin
-      console.log("Intentando resetear contraseña para:", email)
-      console.log("Usando ruta:", ROUTES.AUTH.RESET_PASSWORD)
-
       await post(ROUTES.AUTH.RESET_PASSWORD, {
         email,
         redirect_url: `${currentUrl}/reset-password`,
@@ -111,17 +108,12 @@ export const AuthProvider = ({ children }) => {
     setError(null)
 
     try {
-      // Añadir logs para depuración
-      console.log("Intentando reescribir contraseña con token:", token ? "token presente" : "token ausente")
-      console.log("Usando ruta:", ROUTES.AUTH.REWRITE_PASSWORD)
-
       // Enviar la solicitud con el formato correcto
       const response = await post(ROUTES.AUTH.REWRITE_PASSWORD, {
         token,
         password: newPassword,
       })
 
-      console.log("Respuesta del servidor:", response.ok ? "Éxito" : "Error")
       return response
     } catch (error) {
       console.error("Error al reescribir contraseña:", error.message)

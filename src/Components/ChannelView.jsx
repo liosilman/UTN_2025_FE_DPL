@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react"
+"use client"
+
+import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
 import { get } from "../utils/fetching/fetching.utils"
 import { ROUTES } from "../config/enviroment"
@@ -17,6 +19,7 @@ const ChannelView = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [refreshMessages, setRefreshMessages] = useState(0)
+  const channelContentRef = useRef(null)
 
   // Cargar información del canal
   useEffect(() => {
@@ -28,7 +31,6 @@ const ChannelView = () => {
 
       try {
         const response = await get(ROUTES.WORKSPACES.CHANNEL_BY_ID(workspaceId, channelId))
-        console.log("Respuesta del canal:", response.data); // Para verificar la respuesta
         setChannel(response.data)
       } catch (error) {
         console.error("Error al cargar información del canal:", error)
@@ -48,6 +50,16 @@ const ChannelView = () => {
     // Incrementar el contador para forzar la recarga de mensajes
     setRefreshMessages((prev) => prev + 1)
   }
+
+  
+  useEffect(() => {
+    if (channelContentRef.current) {
+      
+      setTimeout(() => {
+        channelContentRef.current.scrollTop = channelContentRef.current.scrollHeight
+      }, 100)
+    }
+  }, [refreshMessages])
 
   if (loading) {
     return (
@@ -76,7 +88,7 @@ const ChannelView = () => {
         channelId={channelId}
       />
 
-      <div className="channel-content">
+      <div className="channel-content" ref={channelContentRef}>
         <MessageList
           workspaceId={workspaceId}
           channelId={channelId}
@@ -90,3 +102,4 @@ const ChannelView = () => {
 }
 
 export default ChannelView
+

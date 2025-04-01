@@ -242,23 +242,34 @@
     top: 0;
     bottom: 0;
     transition: left 0.3s ease;
-    z-index: 90;
+
+    overflow-y: auto;
+    height: 100%;
   }
 
   .sidebar.open {
     left: 50px;
-    /* Ajustado para dejar espacio para la barra de navegación de workspaces */
+
     width: 260px;
+
+    overflow-y: auto;
+    height: 100%;
   }
 
   .sidebar-mobile-toggle {
     display: flex;
     z-index: 95;
+
+    position: fixed;
+    bottom: 70px;
+    right: 16px;
   }
 }
 
 @media (max-width: 480px) {
   .sidebar.open {
     width: calc(100% - 50px);
+
+    overflow-y: auto;
   }
 }

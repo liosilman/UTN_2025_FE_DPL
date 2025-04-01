@@ -4,6 +4,12 @@
 
 Este proyecto es un clon de Slack desarrollado con la finalidad de ser el trabajo final de Fullstack. La aplicación permite a los usuarios crear espacios de trabajo (workspaces), canales de comunicación, y enviar mensajes dentro de los canales, replicando las funcionalidades principales de Slack.
 
+## Dificultades y aprendizajes
+
+
+La conexion con el backend me dio mas de un dolor de cabeza pero diria que eso me ayudo a entender muchisimo mas como funciona, para la parte final ya estaba muchisimo mas canchero y pude solucionar los problemas que iba teniendo mucho mas rapido que las primeras veces asi que diria que fue una buena experiencia, me quedaron funciones que no llegue a implementar por falta de tiempo pero que a futuro voy a agregar, algunas quedaron ya implementadas con los estilos pero falta la conexion al Backend para la funcionalidad, a comparacion del primer TP de Frontend me senti mucho mas comodo con las interfaces y creo que pude lograr un mejor trabajo en general.
+
+
 ## Características Principales
 
 - Autenticación de usuarios (registro, inicio de sesión, restablecimiento de contraseña)

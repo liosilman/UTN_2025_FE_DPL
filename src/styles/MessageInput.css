@@ -2,6 +2,11 @@
   padding: 16px;
   border-top: 1px solid var(--slack-color-border);
   background-color: white;
+
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
 }
 
 .message-input-container {
@@ -95,9 +100,15 @@
   border-radius: 4px;
 }
 
+
 @media (max-width: 768px) {
   .message-input {
     padding: 10px;
+
+    position: fixed;
+    bottom: 0;
+    left: 50px;
+    width: calc(100% - 50px);
   }
 
   .message-input-field {
