@@ -75,7 +75,7 @@ const ResetPasswordScreen = () => {
       if (!token) {
         throw new Error("Token no proporcionado")
       }
-      console.log("Nueva contraseña:", values.password)
+      console.log("Intentando restablecer contraseña con:", { token, password: values.password })
       await rewritePassword(token, values.password)
       setResetSuccess(true)
       setTimeout(() => {
@@ -84,6 +84,7 @@ const ResetPasswordScreen = () => {
         })
       }, 3000)
     } catch (error) {
+      console.error("Error en rewritePassword:", error)
       setResetError("No se pudo actualizar la contraseña. El enlace puede haber expirado. Por favor, solicita un nuevo enlace.")
     } finally {
       setIsSubmitting(false)
