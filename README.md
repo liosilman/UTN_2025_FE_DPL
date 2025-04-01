@@ -30,52 +30,52 @@ La conexion con el backend me dio mas de un dolor de cabeza pero diria que eso m
 
 ## Estructura del Proyecto
 
-📦src
- ┣ 📂assets
- ┃ ┗ 📜react.svg
- ┣ 📂Components
- ┃ ┣ 📜ChannelView.jsx
- ┃ ┣ 📜Header.jsx
- ┃ ┣ 📜InviteUserForm.jsx
- ┃ ┣ 📜MainLayout.jsx
- ┃ ┣ 📜MessageInput.jsx
- ┃ ┣ 📜MessageList.jsx
- ┃ ┣ 📜ProtectedRoute.jsx
- ┃ ┣ 📜Sidebar.jsx
- ┃ ┗ 📜WorkspaceNav.jsx
- ┣ 📂config
- ┃ ┗ 📜enviroment.js
- ┣ 📂Context
- ┃ ┣ 📜AuthContext.jsx
- ┃ ┣ 📜ThemeContext.jsx
- ┃ ┗ 📜WorkspaceContext.jsx
- ┣ 📂hooks
- ┃ ┣ 📜useApiRequest.jsx
- ┃ ┗ 📜useForm.jsx
- ┣ 📂Screens
- ┃ ┣ 📜ChannelsScreen.jsx
- ┃ ┣ 📜LoginScreen.jsx
- ┃ ┣ 📜MessagesScreen.jsx
- ┃ ┣ 📜ProfileScreen.jsx
- ┃ ┣ 📜RegisterScreen.jsx
- ┃ ┣ 📜ResetPasswordScreen.jsx
- ┃ ┗ 📜WorkspacesScreen.jsx
- ┣ 📂styles
- ┃ ┣ 📜App.css
- ┃ ┣ 📜Auth.css
- ┃ ┣ 📜ChannelView.css
- ┃ ┣ 📜Header.css
- ┃ ┣ 📜InviteUser.css
- ┃ ┣ 📜MainLayout.css
- ┃ ┣ 📜MessageInput.css
- ┃ ┣ 📜MessageList.css
- ┃ ┣ 📜Profile.css
- ┃ ┣ 📜Sidebar.css
- ┃ ┣ 📜WorkspaceNav.css
- ┃ ┗ 📜Workspaces.css
- ┣ 📂utils
- ┃ ┣ 📂fetching
- ┃ ┃ ┗ 📜fetching.utils.js
- ┃ ┗ 📜error.utils.js
- ┣ 📜App.jsx
- ┗ 📜main.jsx
+src
+ ┣ assets
+ ┃ ┗ react.svg
+ ┣ Components
+ ┃ ┣ ChannelView.jsx
+ ┃ ┣ Header.jsx
+ ┃ ┣ InviteUserForm.jsx
+ ┃ ┣ MainLayout.jsx
+ ┃ ┣ MessageInput.jsx
+ ┃ ┣ MessageList.jsx
+ ┃ ┣ ProtectedRoute.jsx
+ ┃ ┣ Sidebar.jsx
+ ┃ ┗ WorkspaceNav.jsx
+ ┣ config
+ ┃ ┗ enviroment.js
+ ┣ Context
+ ┃ ┣ AuthContext.jsx
+ ┃ ┣ ThemeContext.jsx
+ ┃ ┗ WorkspaceContext.jsx
+ ┣ hooks
+ ┃ ┣ useApiRequest.jsx
+ ┃ ┗ useForm.jsx
+ ┣ Screens
+ ┃ ┣ ChannelsScreen.jsx
+ ┃ ┣ LoginScreen.jsx
+ ┃ ┣ MessagesScreen.jsx
+ ┃ ┣ ProfileScreen.jsx
+ ┃ ┣ RegisterScreen.jsx
+ ┃ ┣ ResetPasswordScreen.jsx
+ ┃ ┗ WorkspacesScreen.jsx
+ ┣ styles
+ ┃ ┣ App.css
+ ┃ ┣ Auth.css
+ ┃ ┣ ChannelView.css
+ ┃ ┣ Header.css
+ ┃ ┣ InviteUser.css
+ ┃ ┣ MainLayout.css
+ ┃ ┣ MessageInput.css
+ ┃ ┣ MessageList.css
+ ┃ ┣ Profile.css
+ ┃ ┣ Sidebar.css
+ ┃ ┣ WorkspaceNav.css
+ ┃ ┗ Workspaces.css
+ ┣ utils
+ ┃ ┣ fetching
+ ┃ ┃ ┗ fetching.utils.js
+ ┃ ┗ error.utils.js
+ ┣ App.jsx
+ ┗ main.jsx
