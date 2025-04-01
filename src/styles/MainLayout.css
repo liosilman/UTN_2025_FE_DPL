@@ -23,7 +23,8 @@
 /* Para pantallas pequeñas */
 @media (max-width: 768px) {
   .main-layout {
-    padding-left: 50px; /* Espacio para la barra de navegación de workspaces */
+    padding-left: 50px;
+    /* Espacio para la barra de navegación de workspaces */
   }
 
   .main-content {
@@ -45,4 +46,3 @@
     margin: 0 auto;
   }
 }
-

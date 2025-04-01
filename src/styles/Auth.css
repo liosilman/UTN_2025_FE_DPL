@@ -21,7 +21,8 @@
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  margin-bottom: 40px; /* Añadir espacio al final */
+  margin-bottom: 40px;
+  /* Añadir espacio al final */
 }
 
 .auth-logo {
@@ -55,7 +56,8 @@
 
 .auth-form-label {
   font-weight: 600;
-  color: #1d1c1d; /* Asegurar buen contraste */
+  color: #1d1c1d;
+  /* Asegurar buen contraste */
   margin-bottom: 8px;
 }
 
@@ -247,4 +249,3 @@
     font-size: 18px;
   }
 }
-

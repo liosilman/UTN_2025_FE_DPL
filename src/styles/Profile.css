@@ -5,10 +5,10 @@
   height: auto;
   min-height: 100%;
   overflow-y: visible;
-  padding-bottom: 60px; /* Añadir espacio adicional al final */
+  padding-bottom: 60px;
+ 
 }
 
-/* Añadir esta regla para asegurar que el contenedor principal permita scroll */
 .main-content {
   overflow-y: auto;
 }
@@ -195,4 +195,3 @@
     grid-template-columns: 1fr;
   }
 }
-

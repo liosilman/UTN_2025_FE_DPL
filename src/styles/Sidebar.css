@@ -246,7 +246,8 @@
   }
 
   .sidebar.open {
-    left: 50px; /* Ajustado para dejar espacio para la barra de navegación de workspaces */
+    left: 50px;
+    /* Ajustado para dejar espacio para la barra de navegación de workspaces */
     width: 260px;
   }
 
@@ -261,4 +262,3 @@
     width: calc(100% - 50px);
   }
 }
-

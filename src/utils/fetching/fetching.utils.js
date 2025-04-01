@@ -1,4 +1,4 @@
-import ENVIROMENT from "../../config/enviroment" 
+import ENVIROMENT from "../../config/enviroment"
 
 /**
  * Realiza una petición a la API con depuración mejorada

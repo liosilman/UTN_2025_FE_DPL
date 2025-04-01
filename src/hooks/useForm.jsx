@@ -9,7 +9,7 @@ import { useState } from "react"
  * @param {Function} validate - Función para validar el formulario
  * @returns {Object} - Objeto con los valores, errores, funciones para manejar cambios y envío
  */
-export const useForm = (initialState = {}, onSubmit = () => {}, validate = () => ({})) => {
+export const useForm = (initialState = {}, onSubmit = () => { }, validate = () => ({})) => {
   const [values, setValues] = useState(initialState)
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)

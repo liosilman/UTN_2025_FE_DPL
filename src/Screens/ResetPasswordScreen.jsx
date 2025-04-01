@@ -1,4 +1,3 @@
-"use client"
 
 import { useState, useEffect } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
@@ -33,8 +32,8 @@ const ResetPasswordScreen = () => {
         setTokenValidated(true)
       }
     } catch (error) {
-      // No establecemos error aquí para evitar confundir al usuario
-      console.log("No se pudo verificar el token previamente, se validará al enviar el formulario")
+      console.error("Error al verificar el token:", error)
+      setResetError("El enlace de restablecimiento de contraseña es inválido o ha expirado.")
     }
   }
 
@@ -109,7 +108,6 @@ const ResetPasswordScreen = () => {
         throw new Error("Token no proporcionado")
       }
 
-      console.log("Intentando restablecer contraseña con token:", token)
 
       // Intentar restablecer la contraseña directamente
       await rewritePassword(token, values.password)
