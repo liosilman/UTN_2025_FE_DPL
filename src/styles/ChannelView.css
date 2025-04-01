@@ -5,6 +5,10 @@
   overflow: hidden;
 }
 
+.main-content {
+  overflow-y: auto;
+}
+
 .channel-info {
   padding: 24px 16px;
   border-bottom: 1px solid var(--slack-color-border);
