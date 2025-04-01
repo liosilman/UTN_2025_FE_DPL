@@ -1,8 +1,6 @@
-"use client"
-
 import { createContext, useState, useEffect, useContext } from "react"
 import { get, post } from "../utils/fetching/fetching.utils"
-import { ROUTES } from "../config/enviroment"
+import ENVIROMENT from "../config/enviroment"
 
 const AuthContext = createContext()
 
@@ -21,7 +19,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const response = await get(ROUTES.USER.ME)
+        const response = await get(ENVIROMENT.ROUTES.USER.ME)
         setUser(response.data)
       } catch (error) {
         console.error("Error verifying auth:", error)
@@ -38,14 +36,14 @@ export const AuthProvider = ({ children }) => {
     setError(null)
 
     try {
-      const response = await post(ROUTES.AUTH.LOGIN, { email, password })
+      const response = await post(ENVIROMENT.ROUTES.AUTH.LOGIN, { email, password })
 
       if (!response.data?.authorization_token) {
         throw new Error("Authorization token missing")
       }
 
       localStorage.setItem("token", response.data.authorization_token)
-      const userResponse = await get(ROUTES.USER.ME)
+      const userResponse = await get(ENVIROMENT.ROUTES.USER.ME)
       setUser(userResponse.data)
       return response.data
     } catch (error) {
@@ -61,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     setError(null)
 
     try {
-      await post(ROUTES.AUTH.REGISTER, userData)
+      await post(ENVIROMENT.ROUTES.AUTH.REGISTER, userData)
     } catch (error) {
       setError(error.response?.data?.message || "Registration failed")
       throw error
@@ -82,7 +80,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // Incluir la URL base actual para que el backend genere enlaces correctos
       const currentUrl = window.location.origin
-      await post(ROUTES.AUTH.RESET_PASSWORD, {
+      await post(ENVIROMENT.ROUTES.AUTH.RESET_PASSWORD, {
         email,
         redirect_url: `${currentUrl}/reset-password`,
       })
@@ -99,24 +97,40 @@ export const AuthProvider = ({ children }) => {
     setError(null)
 
     try {
-      // Intenta con ambos formatos para compatibilidad
+      console.log("Intentando reescribir contraseña con token:", token)
+      console.log("URL del endpoint:", ENVIROMENT.ROUTES.AUTH.REWRITE_PASSWORD)
+
+      // Depuración adicional
+      console.log("Datos a enviar:", {
+        token: token,
+        password: newPassword ? "[REDACTED]" : undefined,
+      })
+
+      // Enviar la solicitud con el formato correcto
+      const response = await post(ENVIROMENT.ROUTES.AUTH.REWRITE_PASSWORD, {
+        token,
+        password: newPassword,
+      })
+
+      console.log("Respuesta del servidor:", response)
+      return response
+    } catch (error) {
+      console.error("Error al reescribir contraseña:", error)
+
+      // Intentar con un formato alternativo como último recurso
       try {
-        const response = await post(ROUTES.AUTH.REWRITE_PASSWORD, {
-          token,
-          password: newPassword,
-        })
-        return response.data
-      } catch (firstError) {
-        console.log("Trying alternative payload format...")
-        const response = await post(ROUTES.AUTH.REWRITE_PASSWORD, {
+        console.log("Intentando con formato alternativo...")
+        const response = await post(ENVIROMENT.ROUTES.AUTH.REWRITE_PASSWORD, {
           reset_token: token,
           password: newPassword,
         })
-        return response.data
+        console.log("Respuesta con formato alternativo:", response)
+        return response
+      } catch (secondError) {
+        console.error("Error con formato alternativo:", secondError)
+        setError(error.message || "Password update failed")
+        throw error
       }
-    } catch (error) {
-      setError(error.response?.data?.message || "Password update failed")
-      throw error
     } finally {
       setLoading(false)
     }

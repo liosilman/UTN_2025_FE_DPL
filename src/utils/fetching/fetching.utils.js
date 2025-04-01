@@ -1,7 +1,43 @@
-import ENVIROMENT from "../../config/enviroment"
+import axios from "axios"
+import { ENVIROMENT } from "../../config/enviroment.config.js"
+
+// Configuración de axios con la URL base
+const api = axios.create({
+  baseURL: ENVIROMENT.URL_BACKEND,
+  headers: {
+    "Content-Type": "application/json",
+  },
+})
+
+// Interceptor para añadir el token de autorización
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token")
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => Promise.reject(error),
+)
+
+// Función para depurar las solicitudes
+const logRequest = (method, url, data = null) => {
+  console.log(`[API ${method}] ${url}`, data ? { data } : "")
+}
+
+// Función para depurar las respuestas
+const logResponse = (method, url, response) => {
+  console.log(`[API ${method} Response] ${url}`, response)
+}
+
+// Función para depurar los errores
+const logError = (method, url, error) => {
+  console.error(`[API ${method} Error] ${url}`, error.response || error)
+}
 
 /**
- * Realiza una petición a la API
+ * Realiza una petición a la API con depuración mejorada
  * @param {string} endpoint - Endpoint de la API
  * @param {Object} options - Opciones de la petición
  * @returns {Promise<Object>} - Respuesta de la API
@@ -19,9 +55,12 @@ export const fetchApi = async (endpoint, options = {}) => {
     }
 
     const url = `${ENVIROMENT.URL_API}${endpoint}`
-    console.log(`Realizando petición a ${url}`, {
-      method: options.method || "GET",
-      body: options.body ? JSON.parse(options.body) : undefined,
+
+    // Mejorar el logging para depuración
+    const requestBody = options.body ? JSON.parse(options.body) : undefined
+    console.log(`[API REQUEST] ${options.method || "GET"} ${url}`, {
+      headers: { ...defaultHeaders, ...options.headers },
+      body: requestBody ? (requestBody.password ? { ...requestBody, password: "[REDACTED]" } : requestBody) : undefined,
     })
 
     // Añadir timeout para evitar que la petición se quede colgada indefinidamente
@@ -42,10 +81,18 @@ export const fetchApi = async (endpoint, options = {}) => {
 
       // Verificar si la respuesta es JSON
       const contentType = response.headers.get("content-type")
+
+      // Log de la respuesta para depuración
+      console.log(`[API RESPONSE] ${options.method || "GET"} ${url}`, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries([...response.headers.entries()]),
+      })
+
       if (!contentType || !contentType.includes("application/json")) {
         // Si no es JSON, intentar obtener el texto para mejor diagnóstico
         const text = await response.text()
-        console.error("Respuesta no JSON:", text)
+        console.error("[API ERROR] Respuesta no JSON:", text)
         console.error("URL:", url)
         console.error("Método:", options.method)
         console.error(
@@ -55,7 +102,7 @@ export const fetchApi = async (endpoint, options = {}) => {
             ...options.headers,
           }),
         )
-        console.error("Body:", options.body)
+        console.error("Body:", options.body ? JSON.parse(options.body) : undefined)
 
         // Intentar determinar el problema
         if (text.includes("Cannot POST") || text.includes("Cannot PUT")) {
@@ -67,7 +114,7 @@ export const fetchApi = async (endpoint, options = {}) => {
 
       const data = await response.json()
 
-      console.log(`Respuesta de ${endpoint}:`, data)
+      console.log(`[API DATA] ${endpoint}:`, data)
 
       if (!response.ok) {
         throw new Error(data.message || "Ha ocurrido un error")
@@ -86,7 +133,7 @@ export const fetchApi = async (endpoint, options = {}) => {
       throw error
     }
   } catch (error) {
-    console.error("Error en fetchApi:", error)
+    console.error("[API ERROR] Error en fetchApi:", error)
 
     // Mejorar los mensajes de error para el usuario
     if (error.message === "Failed to fetch") {
@@ -99,12 +146,7 @@ export const fetchApi = async (endpoint, options = {}) => {
   }
 }
 
-/**
- * Realiza una petición GET a la API
- * @param {string} endpoint - Endpoint de la API
- * @param {Object} options - Opciones de la petición
- * @returns {Promise<Object>} - Respuesta de la API
- */
+// El resto de las funciones (get, post, put, del) se mantienen igual
 export const get = (endpoint, options = {}) => {
   return fetchApi(endpoint, {
     method: "GET",
@@ -112,13 +154,6 @@ export const get = (endpoint, options = {}) => {
   })
 }
 
-/**
- * Realiza una petición POST a la API
- * @param {string} endpoint - Endpoint de la API
- * @param {Object} body - Cuerpo de la petición
- * @param {Object} options - Opciones de la petición
- * @returns {Promise<Object>} - Respuesta de la API
- */
 export const post = (endpoint, body, options = {}) => {
   return fetchApi(endpoint, {
     method: "POST",
@@ -127,13 +162,6 @@ export const post = (endpoint, body, options = {}) => {
   })
 }
 
-/**
- * Realiza una petición PUT a la API
- * @param {string} endpoint - Endpoint de la API
- * @param {Object} body - Cuerpo de la petición
- * @param {Object} options - Opciones de la petición
- * @returns {Promise<Object>} - Respuesta de la API
- */
 export const put = (endpoint, body, options = {}) => {
   return fetchApi(endpoint, {
     method: "PUT",
@@ -142,12 +170,6 @@ export const put = (endpoint, body, options = {}) => {
   })
 }
 
-/**
- * Realiza una petición DELETE a la API
- * @param {string} endpoint - Endpoint de la API
- * @param {Object} options - Opciones de la petición
- * @returns {Promise<Object>} - Respuesta de la API
- */
 export const del = (endpoint, options = {}) => {
   return fetchApi(endpoint, {
     method: "DELETE",
