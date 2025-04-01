@@ -132,6 +132,19 @@ const ResetPasswordScreen = () => {
         <h1 className="auth-title">{!token ? "Restablecer contraseña" : "Crear nueva contraseña"}</h1>
         <p className="auth-subtitle">{!token ? "Ingresa tu email para recibir instrucciones" : "Crea una nueva contraseña segura"}</p>
         {resetError && <div className="auth-error"><p>{resetError}</p></div>}
+
+        {!token ? (
+          <form onSubmit={submitRequestForm}>
+            <input type="email" name="email" value={requestValues.email} onChange={handleRequestChange} onBlur={handleRequestBlur} placeholder="Ingresa tu email" disabled={isSubmitting} />
+            <button type="submit" disabled={isSubmitting}>Enviar instrucciones</button>
+          </form>
+        ) : (
+          <form onSubmit={submitResetForm}>
+            <input type="password" name="password" value={resetValues.password} onChange={handleResetChange} onBlur={handleResetBlur} placeholder="Nueva contraseña" disabled={isSubmitting} />
+            <input type="password" name="confirmPassword" value={resetValues.confirmPassword} onChange={handleResetChange} onBlur={handleResetBlur} placeholder="Confirmar contraseña" disabled={isSubmitting} />
+            <button type="submit" disabled={isSubmitting}>Actualizar contraseña</button>
+          </form>
+        )}
       </div>
     </div>
   )
