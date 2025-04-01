@@ -1,4 +1,3 @@
-
 import { createContext, useState, useEffect, useContext } from "react"
 import { get, post } from "../utils/fetching/fetching.utils"
 import { ROUTES } from "../config/enviroment" // Importar ROUTES correctamente
@@ -60,7 +59,17 @@ export const AuthProvider = ({ children }) => {
     setError(null)
 
     try {
-      await post(ROUTES.AUTH.REGISTER, userData)
+      // Obtener la URL base actual para la redirección
+      const currentUrl = window.location.origin
+
+      // Añadir la URL de redirección a los datos de usuario
+      const userDataWithRedirect = {
+        ...userData,
+        redirect_url: `${currentUrl}/login?verified=true`,
+      }
+
+      // Enviar la solicitud con la URL de redirección
+      await post(ROUTES.AUTH.REGISTER, userDataWithRedirect)
     } catch (error) {
       setError(error.response?.data?.message || "Registration failed")
       throw error
