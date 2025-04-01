@@ -1,3 +1,4 @@
+"use client"
 
 import { useState, useEffect } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
@@ -226,14 +227,17 @@ const ResetPasswordScreen = () => {
                 type="email"
                 id="email"
                 name="email"
-                className="auth-form-input"
+                className="auth-form-input reset-email"
                 value={requestValues.email}
                 onChange={handleRequestChange}
                 onBlur={handleRequestBlur}
                 disabled={isSubmitting}
+                aria-describedby="email-error"
               />
               {requestTouched.email && requestErrors.email && (
-                <div className="auth-form-error">{requestErrors.email}</div>
+                <div className="auth-form-error" id="email-error">
+                  {requestErrors.email}
+                </div>
               )}
             </div>
 
@@ -300,3 +304,4 @@ const ResetPasswordScreen = () => {
 }
 
 export default ResetPasswordScreen
+

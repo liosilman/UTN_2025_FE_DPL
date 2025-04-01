@@ -54,10 +54,9 @@
 }
 
 .auth-form-label {
-  display: block;
-  margin-bottom: 8px;
   font-weight: 600;
-  color: var(--slack-color-text);
+  color: #1d1c1d; /* Asegurar buen contraste */
+  margin-bottom: 8px;
 }
 
 .auth-form-input {
@@ -73,6 +72,18 @@
   outline: none;
   border-color: var(--slack-color-accent);
   box-shadow: 0 0 0 1px var(--slack-color-accent);
+}
+
+/* Añadir estilos específicos para el input de email en reset password */
+.auth-form-input.reset-email {
+  border: 1px solid var(--slack-color-border);
+  transition: border-color 0.3s ease;
+  background-color: #fff;
+}
+
+.auth-form-input.reset-email:focus {
+  border-color: var(--slack-color-accent);
+  box-shadow: 0 0 0 2px rgba(54, 197, 240, 0.2);
 }
 
 .auth-form-button {
@@ -95,6 +106,12 @@
 .auth-form-button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+/* Mejorar la accesibilidad de los botones */
+.auth-form-button:focus {
+  outline: 2px solid var(--slack-color-accent);
+  outline-offset: 2px;
 }
 
 .auth-form-footer {
@@ -132,10 +149,14 @@
   border-radius: 4px;
 }
 
+/* Mejorar el contraste de los mensajes de error */
 .auth-form-error {
-  color: var(--slack-color-error);
-  font-size: 12px;
-  margin-top: 5px;
+  color: #e01e5a;
+  font-weight: 500;
+  background-color: rgba(224, 30, 90, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-top: 6px;
 }
 
 .auth-loading {
