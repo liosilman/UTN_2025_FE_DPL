@@ -1,3 +1,5 @@
+"use client"
+
 import { createContext, useState, useEffect, useContext } from "react"
 import { get, post } from "../utils/fetching/fetching.utils"
 import ENVIROMENT from "../config/enviroment"
@@ -97,14 +99,8 @@ export const AuthProvider = ({ children }) => {
     setError(null)
 
     try {
-      console.log("Intentando reescribir contraseña con token:", token)
-      console.log("URL del endpoint:", ENVIROMENT.ROUTES.AUTH.REWRITE_PASSWORD)
-
-      // Depuración adicional
-      console.log("Datos a enviar:", {
-        token: token,
-        password: newPassword ? "[REDACTED]" : undefined,
-      })
+      // Añadir logs para depuración
+      console.log("Intentando reescribir contraseña con token:", token ? "token presente" : "token ausente")
 
       // Enviar la solicitud con el formato correcto
       const response = await post(ENVIROMENT.ROUTES.AUTH.REWRITE_PASSWORD, {
@@ -112,25 +108,12 @@ export const AuthProvider = ({ children }) => {
         password: newPassword,
       })
 
-      console.log("Respuesta del servidor:", response)
+      console.log("Respuesta del servidor:", response.ok ? "Éxito" : "Error")
       return response
     } catch (error) {
-      console.error("Error al reescribir contraseña:", error)
-
-      // Intentar con un formato alternativo como último recurso
-      try {
-        console.log("Intentando con formato alternativo...")
-        const response = await post(ENVIROMENT.ROUTES.AUTH.REWRITE_PASSWORD, {
-          reset_token: token,
-          password: newPassword,
-        })
-        console.log("Respuesta con formato alternativo:", response)
-        return response
-      } catch (secondError) {
-        console.error("Error con formato alternativo:", secondError)
-        setError(error.message || "Password update failed")
-        throw error
-      }
+      console.error("Error al reescribir contraseña:", error.message)
+      setError(error.message || "Password update failed")
+      throw error
     } finally {
       setLoading(false)
     }
