@@ -17,6 +17,7 @@ const ResetPasswordScreen = () => {
   
   useEffect(() => {
     if (!token) return
+    console.log("Token recibido:", token)
     const verifyTokenValidity = async () => {
       try {
         const response = await fetch(`/api/auth/verify-reset-token?token=${token}`)
@@ -74,6 +75,7 @@ const ResetPasswordScreen = () => {
       if (!token) {
         throw new Error("Token no proporcionado")
       }
+      console.log("Nueva contraseña:", values.password)
       await rewritePassword(token, values.password)
       setResetSuccess(true)
       setTimeout(() => {
@@ -140,8 +142,8 @@ const ResetPasswordScreen = () => {
           </form>
         ) : (
           <form onSubmit={submitResetForm}>
-            <input type="password" name="password" value={resetValues.password} onChange={handleResetChange} onBlur={handleResetBlur} placeholder="Nueva contraseña" disabled={isSubmitting} />
-            <input type="password" name="confirmPassword" value={resetValues.confirmPassword} onChange={handleResetChange} onBlur={handleResetBlur} placeholder="Confirmar contraseña" disabled={isSubmitting} />
+            <input type="password" name="password" className="auth-form-input" value={resetValues.password} onChange={handleResetChange} onBlur={handleResetBlur} placeholder="Nueva contraseña" disabled={isSubmitting} />
+            <input type="password" name="confirmPassword" className="auth-form-input" value={resetValues.confirmPassword} onChange={handleResetChange} onBlur={handleResetBlur} placeholder="Confirmar contraseña" disabled={isSubmitting} />
             <button type="submit" disabled={isSubmitting}>Actualizar contraseña</button>
           </form>
         )}
